@@ -1,0 +1,37 @@
+<div class="text-dark px-1 bg-white">
+  <div class="d-flex justify-content-between">
+    <h3 class="w-100">{{ materialForm.value.material }}</h3></div>
+    <ion-grid>
+      <ion-row>
+        <ion-col><h5 class="text-center">Unidad</h5><div class="text-center">{{ materialForm.value.unidad}}</div></ion-col>
+        <ion-col><h5 class="text-center">PU</h5><div class="text-center">{{ calcPrecio() }}</div></ion-col>
+        <ion-col><h5 class="text-center">Total</h5><div class="text-center">{{ calcTotal(materialForm.value,context) }}</div></ion-col>
+      </ion-row>
+    </ion-grid>
+  
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6">
+
+        <div class="card-feature bordergray"  [class.borderred]="materialForm.controls.ancho.invalid">
+          <div class="card-feature-content">
+            <h5 class="text-center">{{"Cantidad" | translation: "cantidad"}}</h5>
+            <app-incremental [initial]="materialForm.controls.cantidad.value" [control]="materialForm.controls.cantidad" />
+          </div>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        
+        <div class="card-feature bordergray"  [class.borderred]="materialForm.controls.ancho.invalid">
+          <div class="card-feature-content">
+            <h5 class="text-center">{{"% Adicional" | translation: "adicional"}}</h5>
+            <div class="incremental">
+              <ion-input placeholder="%" type="number" class="text-center" 
+              [formControl]="materialForm.controls.adicional" />
+            </div>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>

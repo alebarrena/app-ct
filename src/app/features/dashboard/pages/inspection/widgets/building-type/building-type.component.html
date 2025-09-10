@@ -1,0 +1,194 @@
+<form (submit)="onSubmit($event)" [formGroup]="formGroup" *ngIf="initialize">
+  <div>
+     <!--TODO: Multiidioma-->
+    <div class="card-feature bordergray">
+      <h5 class="alignLeft padd10"><strong>{{"Selecciona tipo de edificación" | translation: "te_selecciona"}}</strong></h5>
+      <div class="building-buttons-wrapper">
+        <ion-button color="transparent" [class.active]="formGroup.controls.Tipo_Inmueble1.value == 'casa'" [class.required]="formGroup.controls.Tipo_Inmueble1.invalid" (click)="handleType('casa')"
+          (click)="handleType('casa')">
+          <div class="text-center">
+            <ion-icon icon="home-outline" />
+            <div><span>{{"CASA" | translation: "te_casa"}}</span></div>
+          </div>
+        </ion-button>
+        <ion-button color="transparent" [class.active]="formGroup.controls.Tipo_Inmueble1.value == 'edificio'"  [class.required]="formGroup.controls.Tipo_Inmueble1.invalid" (click)="handleType('edificio')"
+          (click)="handleType('edificio')">
+          <div class="text-center">
+            <ion-icon icon="business-outline" />
+            <div><span>{{"EDIFICIO" | translation: "te_edificio"}}</span></div>
+          </div>
+        </ion-button>
+        <ion-button color="transparent"  [class.active]="formGroup.controls.Tipo_Inmueble1.value == 'tienda'"  [class.required]="formGroup.controls.Tipo_Inmueble1.invalid"  (click)="handleType('tienda')"
+          (click)="handleType('tienda')">
+          <div class="text-center">
+            <ion-icon icon="storefront-outline" />
+            <div><span>{{"TIENDA" | translation: "te_tienda"}}</span></div>
+          </div>
+        </ion-button>
+        <ion-button color="transparent"  [class.active]="formGroup.controls.Tipo_Inmueble1.value == 'oficina'"   [class.required]="formGroup.controls.Tipo_Inmueble1.invalid" (click)="handleType('oficina')"
+          (click)="handleType('oficina')">
+          <div class="text-center">
+            <ion-icon icon="briefcase-outline" />
+            <div><span>{{"OFICINA" | translation: "te_oficina"}}</span></div>
+          </div>
+        </ion-button>
+      </div>
+      <div>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <div class="card-feature bordergray" [class.borderred]="formGroup.controls.superficie.invalid">
+                <div class="card-feature-content">
+                  <h5>{{"Superficie" | translation: "te_superficie"}}</h5>
+                  <div class="incremental">
+                    <ion-input placeholder="m²" type="number" class="text-center" [formControl]="formGroup.controls.superficie" />
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div class="card-feature bordergray" [class.borderred]="formGroup.controls.antiguedad.invalid">
+                <div class="card-feature-content">
+                  <h5>{{"Antiguedad" | translation: "te_antiguedad"}}</h5>
+                  <div class="incremental">
+                    <ion-input placeholder="0" type="number" class="text-center" [formControl]="formGroup.controls.antiguedad" />
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="card-feature bordergray" [class.borderred]="formGroup.controls.habitantesFamilias.invalid">
+                <div class="card-feature-content">
+                  <h5>{{"Habitantes" | translation: "te_habitantes"}}</h5>
+                  <app-incremental  [initial]="val(formGroup.controls.habitantesFamilias.value)" [control]="formGroup.controls.habitantesFamilias" /></div>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div class="card-feature bordergray" [class.borderred]="formGroup.controls.nro_subterraneos.invalid">
+                <div class="card-feature-content">
+
+                  <h5>{{"Menores" | translation: "te_menores"}}</h5>
+
+                  <app-incremental [initial]="val(formGroup.controls.menores.value)"  [control]="formGroup.controls.menores" />
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="card-feature bordergray" [class.borderred]="formGroup.controls.niveles.invalid">
+                <div class="card-feature-content">
+                  <h5>{{"Niveles" | translation: "te_niveles"}}</h5>
+                  <app-incremental [initial]="val(formGroup.controls.niveles.value)" [control]="formGroup.controls.niveles" /></div>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div class="card-feature bordergray"[class.borderred]="formGroup.controls.n_pisos.invalid">
+                <div class="card-feature-content">
+                  <h5>{{"Piso de inspección" | translation: "te_piso"}}</h5>
+  
+                  <app-incremental  [initial]="val(formGroup.controls.n_pisos.value)" [control]="formGroup.controls.n_pisos" /></div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="card-feature bordergray" [class.borderred]="formGroup.controls.nro_subterraneos.invalid">
+                <div class="card-feature-content">
+
+                  <h5>{{"Subterráneos" | translation: "te_subterraneos"}}</h5>
+
+                  <app-incremental [initial]="val(formGroup.controls.nro_subterraneos.value)"  [control]="formGroup.controls.nro_subterraneos" />
+                </div>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div class="card-feature bordergray">
+                <div class="card-feature-content">
+                  <h5>{{"Habitable" | translation: "te_habitable"}}</h5>
+                  <div class="incremental" style="padding-bottom: 17px;">
+                    <ion-toggle class="toggle-s" [formControl]="formGroup.controls.habitable" mode="ios"></ion-toggle>
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="card-feature bordergray" [class.borderred]="formGroup.controls.tipo_zona.invalid">
+                <h5>{{"Tipo de zona" | translation: "te_tipo_zona"}}</h5>
+                <ion-radio-group class="radio-selector-type" mode="md" [formControl]="formGroup.controls.tipo_zona">
+                  <ion-row>
+                       <!--TODO: Esto debe ir una bajo la otra y no tiene el input-->
+                    <ion-col>
+                      <div>
+                        <ion-radio value="rural" mode="md"></ion-radio>
+                        <h5>{{"Rural" | translation: "te_rural"}}</h5>
+                      </div>
+                    </ion-col>
+                    <ion-col>
+                      <ion-radio value="urbana" mode="md"></ion-radio>
+                      <h5>{{"Urbana" | translation: "te_urbana"}}</h5>
+                    </ion-col>
+                    <ion-col>
+                      <ion-radio value="especial" mode="md"></ion-radio>
+                      <h5>{{"Especial" | translation: "te_especial"}}</h5>
+                    </ion-col>
+                  </ion-row>
+                </ion-radio-group>
+          
+              </div>
+            </ion-col>  
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+ 
+    <h5 class="alignLeft padd10"><strong>{{"Descripción del riesgo asegurado" | translation: "te_descripcion_riesgo"}}</strong></h5>
+    <ion-textarea class="text-area alignLeft padd10" [formControl]="formGroup.controls.Contratante_Observaciones" placeholder="Descripción"></ion-textarea>
+    <div class="marg10"></div>
+    <div class="card-feature bordergray">
+      <h5 class="alignLeft padd10"><strong>{{"Selecciona materialidad" | translation: "te_materialidad"}}</strong></h5>
+
+      <ion-accordion-group class="buildings-options-list">
+        <ion-accordion [value]="'materialidad-' + i" *ngFor="let zone of zones;let i = index;">
+          <ion-item slot="header" >
+            <ion-icon name="square-outline" class="icon-check" *ngIf="this.formGroup.controls[zone.label].value==null || this.formGroup.controls[zone.label].value=='' || this.formGroup.controls[zone.label].value=='[]'" />
+            <ion-icon name="checkbox" class="icon-check" *ngIf="!(this.formGroup.controls[zone.label].value==null || this.formGroup.controls[zone.label].value=='' || this.formGroup.controls[zone.label].value=='[]')" />
+            <ion-label>{{ zone.key  }}</ion-label>
+          </ion-item>
+          <ion-button color="transparent" slot="content" *ngFor="let z of zone.values" (click)="select(z)" ref="check(z.claveformulario,zone.key,z.valorformulario,(this.formGroup.controls[z.valorformulario].value == z.tipo_materialidad)?'':z.tipo_materialidad )">
+            <div class="item-accordion">
+              <span class="alignLeft">{{ z.tipo_materialidad }}</span> 
+              <ion-icon color="primary" class="check-icon" name="checkmark-outline" *ngIf="this.formGroup.controls[z.valorformulario].value!=null && this.formGroup.controls[z.valorformulario].value.includes(z.tipo_materialidad)" />
+            </div>
+          </ion-button>
+        </ion-accordion>
+      </ion-accordion-group>
+    </div>
+
+    <div class="marg10"></div>
+
+      <div class="card-feature bordergray">
+        <h5 class="alignLeft padd10"><strong>{{"Medidas de Seguridad" | translation: "te_seguridad"}}</strong></h5>
+        <ion-accordion-group class="buildings-options-list">
+          <ion-accordion [value]="'materialidad-' + i" *ngFor="let zone of seguridad;let i = index;">
+
+            <ion-item slot="header" >          
+              <ion-icon name="square-outline" class="icon-check" *ngIf="this.formGroup.controls[zone.label].value==null || this.formGroup.controls[zone.label].value=='' || this.formGroup.controls[zone.label].value=='[]'" />
+              <ion-icon name="checkbox" class="icon-check" *ngIf="!(this.formGroup.controls[zone.label].value==null || this.formGroup.controls[zone.label].value=='' || this.formGroup.controls[zone.label].value=='[]')" />
+              <ion-label>{{ zone.key  }}</ion-label>
+            </ion-item>
+            <ion-button color="transparent" slot="content" *ngFor="let z of zone.values" (click)="selectSeguridad(z)"  ref="check(z.claveformulario,zone.key,z.valorformulario, (this.formGroup.controls[z.valorformulario].value == z.tipo_seguridad)?'':z.tipo_seguridad )">
+              <div class="item-accordion px-2">
+                <span class="alignLeft">{{ z.tipo_seguridad }}</span> 
+                <ion-icon color="primary" class="check-icon" name="checkmark-outline" *ngIf="this.formGroup.controls[z.valorformulario].value!=null && this.formGroup.controls[z.valorformulario].value.includes(z.tipo_seguridad)"/>
+              </div>
+            </ion-button>
+          </ion-accordion>
+        </ion-accordion-group>
+    </div>
+  </div>
+</form>

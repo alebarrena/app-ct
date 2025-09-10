@@ -1,0 +1,21 @@
+<div class="mat-dialog-container text-dark" style="padding:10px;">
+  <h2 style="margin-top:0; font-size: 1.5rem; font-weight: 500; color: #333;">Registrar gasto</h2>
+  <form #gastoForm="ngForm" autocomplete="off">
+    <div class="mt-2">
+      <label style="display:block; font-weight:500; margin-bottom:4px; color:#555;">Descripción</label>
+      <ion-input type="text" name="descripcion" [(ngModel)]="gasto.descripcion" required style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc;"></ion-input>
+    </div>
+    <div class="mt-2">
+      <label style="display:block; font-weight:500; margin-bottom:4px; color:#555;">Monto</label>
+      <ion-input type="number" name="monto" [(ngModel)]="gasto.monto" required style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc;"></ion-input>
+    </div>
+    <div class="mt-2">
+      <label style="display:block; font-weight:500; margin-bottom:4px; color:#555;">Fecha</label>
+      <ion-input type="date" name="fecha" [(ngModel)]="gasto.fecha" required style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc;"></ion-input>
+    </div>
+    <div class="mt-2 d-flex">
+      <ion-button type="button" (click)="cancelar()">Cancelar</ion-button>
+      <ion-button type="button"  color="primary"(click)="guardar()" [disabled]="!gastoForm.form.valid">Guardar</ion-button>
+    </div>
+  </form>
+</div>

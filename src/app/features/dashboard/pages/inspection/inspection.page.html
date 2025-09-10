@@ -1,0 +1,176 @@
+<app-page-layout [title]='"Inspección" | translation:"ho_inspeccion"'>
+  <div class="inspection-wrap-container">
+    <div class="title-report" id="footer">
+      <ion-icon color="primary" name="document-text-outline" /> {{ id }}
+    </div>
+    <div class="inspection-stats">
+      <div>
+        <h3>{{"Asegurado" | translation: "mo_monto"}}</h3>
+        <p class="text-center text-sm">UF {{ formatCurrency(data?.monto_Asegurado) }}</p>
+      </div>
+      <div class="border-left">
+        <h3>{{ "Deducible" | translation: "mo_deducible"}}</h3>
+        <p class="text-center text-sm">UF {{ formatCurrency(data?.deducible) }}</p>
+      </div>
+      <div class="border-left">
+        <h3>{{"Cobertura" | translation: "mo_covertura"}}</h3>
+        <p class="text-center text-sm">{{ (data?.causa) }}</p>
+      </div>
+      <div class="border-left"> 
+        <h3>{{"Polizas" | translation: "mo_poliza"}}</h3>
+        <ion-button class="text-center text-dark text-sm p-0" color="transparent" 
+        [routerLink]="'/inspection/'+id+'/policies'"
+          >{{"Ver detalle" | translation: "mo_detalle"}}</ion-button
+        >
+      </div>
+    </div>
+    <div [ngClass]="inspection_status!='CANCELLED'?'d-block':'d-none'">
+      <h1 class="heading-title" *ngIf="section != 'CANCELLED'">{{ sections[this.page].title | translation:sections[this.page].tag }}</h1>
+      <div *ngIf="!selected">
+        <app-inspection-modules
+          [swiper]="swiper"
+          [formGroup]="form"
+          (onSelected)="onSelected($event)"
+          (onInit)="selectedImageContext('')"
+        />
+        <div class="mt-2">
+          <ion-button color="primary" (click)="dialogDesestimiento()">Desistir</ion-button>
+        </div>
+        <div class="mt-2">
+          <h6 class="text-disabled">{{'Estado de la inspeccion' | translation:"ma_estado" }}</h6>
+          <div class="d-flex justify-content-between items-center my-2">
+            <div class="d-flex items-center color-disabled">
+              <ion-icon
+                name="remove-circle-sharp"
+                class="color-disabled mr-1"
+              />{{'Por revisar' | translation:"ma_porrevisar" }}
+            </div>
+            <div class="d-flex items-center color-disabled">
+              <ion-icon
+                class="color-green mr-1"
+                name="checkmark-circle"
+              />{{'Finalizado' | translation:"ma_finalizado"}}
+            </div>
+          </div>
+        </div>
+        <div class="mt-2">
+          <ion-button color="primary" (click)="goToExpenses()">Gastos</ion-button>
+        </div>
+        <div class="mt-2">
+          <ion-accordion-group [multiple]="true" [value]="['image']">
+            <ion-accordion value="image" class="image-list">
+              <ion-item slot="header">
+                {{"Imágenes de la edificacion" | translation:"ma_imagenes"}}
+              </ion-item>
+              <div
+                slot="content"
+                value="image"
+                class="image-element-list px-2"
+                *ngFor="let image of images;let i = index"
+              >
+                <ion-icon icon="images-outline" />
+                <ion-button color="transparent" class="text-start" (click)="openImage(image)"
+                  ><ion-label>{{image.filename}}</ion-label></ion-button
+                >
+                <div>
+                  <ion-button color="transparent" (click)="removeImage(image)"
+                    ><ion-icon icon="trash-outline" class="trash-icon"
+                  /></ion-button>
+                </div>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </div>
+      </div>
+      <div class="modules-slider" [ngClass]="section!=''?'d-block':'d-none'">
+        <div class="modules-pagination">
+          <ion-button
+            (click)="backSection()"
+            class="page-back"
+            color="transparent"
+            ><ion-icon icon="chevron-back"
+          /></ion-button>
+          <ion-button
+            (click)="nextSection()"
+            class="page-forward"
+            color="transparent"
+            ><ion-icon icon="chevron-forward"
+          /></ion-button>
+        </div>
+        <div 
+        [style.visibility]="(selected)?'visible':'collapse'">
+  
+        <swiper-container
+          #swiperRef
+          [showsPagination]="false"
+          class="inspection-swiper"
+          [config]="config"
+          init="false"
+        >
+          <!--TODO: aqui debe ir la leyenda de los iconos (Avance)-->
+          <swiper-slide>
+            <app-general-background
+              *ngIf="section == 'general-background'"
+              [formMain]="form" 
+              [formGroup]="form.controls.formAntecedentesGenerales"
+              (nextSection)="nextSection()"
+              (onUpdated)="updateForm($event)"
+              (onSelected)="selectedImageContext($event)"
+            />
+          </swiper-slide>
+          <swiper-slide>
+            <app-insured-story
+              [id]="id"
+              *ngIf="section == 'insured-story' "
+              [formGroup]="form.controls.formRelatoAsegurado"
+              (onUpdated)="updateForm($event)"
+            />
+          </swiper-slide>
+          <swiper-slide>
+            <app-building-type
+              *ngIf="section == 'building-type' "
+              [formGroup]="form.controls.formTipoInmueble"
+              (onUpdated)="updateForm($event)"
+            />
+          </swiper-slide>
+          <swiper-slide>
+            <app-affected-sectors
+              *ngIf="section == 'affected-sectors' "  [completed]="completed"
+              [formArray]="form.controls.formSectoresAfectados"
+              (onUpdated)="updateForm($event)"
+            />
+          </swiper-slide>
+          <swiper-slide>
+            <app-building-damage *ngIf="section == 'building-damage' " [formGroup]="form" 
+            [images]="images" [completed]="completed"
+            (onImageUpdate)="fetchImages()"
+            (onSelected)="selectedImageContext($event)"
+            (onUpdated)="updateForm($event)"/>
+          </swiper-slide>
+          <swiper-slide> <app-content-damage 
+            *ngIf="section == 'content-damage' " [formGroup]="form" [completed]="completed"/> </swiper-slide>
+            <swiper-slide>
+              <app-document-images *ngIf="section == 'document-images' "/>
+            </swiper-slide>
+          <swiper-slide> <app-signatures 
+            *ngIf="section == 'signatures' " [formGroup]="form" /> </swiper-slide>
+        </swiper-container>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="inspection_status == 'CANCELLED'">
+      <div class="mt-2 mb-2">
+
+        <div class="alert-danger text-center mt-2 mb-2">
+          La inspeccion ha sido desestimada
+        </div>
+      </div>
+      <ion-button (click)="download()" shape="round"  fill="outline" class="inspection-download-button"><ion-icon icon="download-outline"/>{{'Descargar Inspeccion' | translation:"fi_descargar"}}</ion-button>  
+    </div>
+  </div>
+</app-page-layout>
+<ion-fab class="button-fab-fixed" *ngIf="!selected || section == 'building-damage' && !summary">
+  <ion-fab-button (click)="dialogMedia()" class="primary-icon">
+    <ion-icon name="camera-sharp"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

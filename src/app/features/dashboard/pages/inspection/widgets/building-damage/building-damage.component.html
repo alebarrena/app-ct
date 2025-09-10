@@ -1,0 +1,282 @@
+<div>
+  <div *ngIf="this.formGroup.controls.formSectoresAfectados.controls.length == 0">
+    <h5 class="text-start w-100">Desliza y selecciona los sectores con danos</h5>
+  </div>
+  <div class="list-item items-damages-buildings d-flex justify-content-between">
+    <ul class="w-100">
+      <li
+        *ngFor="let item of this.formGroup.controls.formSectoresAfectados.controls; let i = index"
+        class="sector-icon"
+        [class.active]="!summary && current == item.value.nombre + '-' + i"
+      >
+        <ion-button color="transparent" (click)="selectItem(item, i)">
+          <ion-icon [name]="icon(item.value.nombre)" />
+        </ion-button>
+      </li>
+    </ul>
+    <div class="sector-icon-div" 
+    [class.active]="summary" >
+    <ion-button color="transparent" (click)="toggleSummary()">
+      <ion-icon name="calculator-outline" />
+    </ion-button>
+    </div>
+  </div>
+  <div *ngIf="summary">
+    <h4>{{'Resumen total de daños' |translation:"de_resumen"}}</h4>
+    <div *ngFor="let c of this.formGroup.controls.formSectoresAfectados.controls; let j = index">
+      <h5 class="text-start">{{ c.value.nombre }}</h5>
+    <ion-card class="card-attr" *ngFor="let item of c.controls.items.controls;let i=index">
+      <h5 class="card-attr-title">
+        {{ item.controls.material.value }}
+        <ion-button color="transparent"  (click)="openDeleteItemDialog(i,item)"
+          ><ion-icon icon="close-outline"
+        /></ion-button>
+      </h5>
+      <div class="attributes">
+        <div>
+          <div class="attr-title">Cant</div>
+          <div>
+            <ion-input class="mini-input" type="number"  (keyup)="updateValues()" [formControl]="item.controls.cantidad"/>
+          </div>
+        </div>
+        <div>
+          <div class="attr-title">Unidad</div>
+          <div>{{ item.controls.unidad.value }}</div>
+        </div>
+        <div>
+          <div class="attr-title">PU</div>
+          <div>{{ formatCurrency(calcPrecio(item.value)) }}</div>
+        </div>
+        <div>
+          <div class="attr-title">%Adic</div>
+          <div>
+            <ion-input class="mini-input" type="number"  (keyup)="updateValues()" [formControl]="item.controls.adicional"/>
+          </div>
+        </div>
+        <div>
+          <div class="attr-title">Total</div>
+          <div>{{ formatCurrency(calcTotal(item.value,c)) }}</div>
+        </div>
+      </div>
+    </ion-card>
+    </div>
+
+    <div class="d-flex justify-content-between card-total">
+      Total
+      <div>{{totalAll()}}</div>
+    </div>
+  </div>
+  <div *ngIf="!summary">
+    <div *ngIf="control != null">
+      <div class="py-1 px-2">{{ control.value.nombre }}</div>
+      <div>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <div class="card-feature bordergray"  [class.borderred]="control.controls.largo.invalid">
+                <h5>{{ "Largo" | translation : "te_largo" }}</h5>
+                <div class="incremental">
+                  <ion-input
+                    placeholder="m"
+                    type="number"
+                    class="text-center"
+                    [formControl]="control.controls.largo"
+                  />
+                </div>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div class="card-feature bordergray" [class.borderred]="control.controls.ancho.invalid">
+                <h5>{{ "Ancho" | translation : "te_ancho" }}</h5>
+                <div class="incremental">
+                  <ion-input
+                    placeholder="m"
+                    type="number"
+                    class="text-center"
+                    [formControl]="control.controls.ancho"
+                  />
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="card-feature bordergray"  [class.borderred]="control.controls.alto.invalid">
+                <h5>{{ "Altura" | translation : "te_altura" }}</h5>
+                <div class="incremental">
+                  <ion-input
+                    placeholder="m"
+                    type="number"
+                    class="text-center"
+                    [formControl]="control.controls.alto"
+                  />
+                </div>
+              </div>
+            </ion-col>
+            <ion-col>
+              <div class="card-feature bordergray"  [class.borderred]="control.controls.dscto_pv.invalid">
+                <h5>{{ "Dscto P y V" | translation : "te_dscto_pv" }}</h5>
+                <div class="incremental">
+                  <ion-input
+                    placeholder="m"
+                    type="number"
+                    class="text-center"
+                    [formControl]="control.controls.dscto_pv"
+                  />
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+    <div *ngIf="control != null" class="pt-2">{{'Ingresa la materialidad del sector afectado'|translation:"te_sector_materialidad"}}</div>
+    <div class="material-component" *ngIf="control != null">
+      <div *ngFor="let section of sections">
+        <ion-card *ngIf="sectionSelected==null || section.label!=sectionSelected.label" (click)="selectSection(section)">
+          <div>{{ section.label | translation:section.tag}}</div>
+          <ion-button color="transparent"
+            ><ion-icon icon="chevron-down"
+          /></ion-button>
+        </ion-card>
+        <div *ngIf="sectionSelected!=null && section.label==sectionSelected.label" class="material-wrapper">
+          <div
+            class="material-selected align-items-center"
+            *ngIf="damageForm.controls.id.value != ''"
+          >
+            <div class="material-form-input">
+              <h6>{{ section.label | translation:section.tag}}</h6>
+              {{damageForm.controls.material.value}}
+            </div>
+            <div class="d-flex">
+              <div>
+                <ion-button color="transparent" (click)="sectionSelected = null"
+                  ><ion-icon icon="chevron-up"
+                /></ion-button>
+              </div>
+              <ion-button color="transparent" (click)="clearForm()"
+                ><ion-icon icon="close-outline"
+              /></ion-button>
+            </div>
+          </div>
+          <div
+            class="material-input-wrapper"
+            *ngIf="damageForm.controls.id.value == ''"
+          >
+            <div class="material-input">
+              <ion-input class="text-start" (keyup)="onChange($event)" [label]="section.label | translation:section.tag" label-placement="floating"/>
+              <div>
+                <ion-button color="transparent" (click)="sectionSelected = null"
+                  ><ion-icon icon="chevron-up"
+                /></ion-button>
+              </div>
+            </div>
+            <div *ngIf="results.length > 0" class="list-container-wrapper">
+              <ul class="list-container">
+                <li *ngFor="let item of results">
+                  <ion-button
+                  color="transparent"
+                  (click)="selectMaterial(item)"
+                  ><div class="button-list-container">{{ item.material }}</div></ion-button
+                >
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="material-item mt-1">
+              <div>{{ sectionSelected.dano | translation:sectionSelected.tag_dano }}</div>
+              <app-incremental suffix="m" [control]="damageForm.controls.superficie" />
+            </div>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+      <ion-grid *ngIf="control!=null">
+        <ion-row>
+          <ion-col size="6"><ion-button shape="round" class="add-sugested-button"  [disabled]="(control.invalid || control.controls.sugeridos_enabled.value == '1') && control.controls.items.length > 0 " (click)="anadirSugeridos()">{{'Añadir Sugeridos' | translation:"cd_anadir_sugeridos"}}</ion-button></ion-col>
+          <ion-col size="6"><ion-button shape="round" class="add-button" [disabled]="control.controls.alto.invalid || control.controls.ancho.invalid || control.controls.largo.invalid " (click)="agregarCard(damageForm.value)"><ion-icon color="primary" icon="add-outline"/>{{'Agregar' | translation:"cd_agregar"}}</ion-button></ion-col>
+  
+        </ion-row>
+      </ion-grid>
+      <div *ngIf="control != null" class="mb-2">
+        <div class="text-center text-disabled my-2" *ngIf="control.controls.items.length == 0">
+          - Vacío -
+        </div>
+        
+        <ion-card class="card-attr" *ngFor="let item of control.controls.items.controls;let i=index">
+          <h5 class="card-attr-title">
+            {{ item.controls.material.value }}
+            <ion-button color="transparent" (click)="removeItem(i,item)"
+              ><ion-icon icon="close-outline" 
+            /></ion-button>
+          </h5>
+          <div class="attributes">
+            <div>
+              <div class="attr-title">Cant</div>
+              <div>
+                <ion-input class="mini-input" type="number" (keyup)="updateValues()" [formControl]="item.controls.cantidad"/>
+              </div>
+            </div>
+            <div>
+              <div class="attr-title">Unidad</div>
+              <div>{{ item.controls.unidad.value }}</div>
+            </div>
+            <div>
+              <div class="attr-title">PU</div>
+              <div>{{ formatCurrency(calcPrecio(item.value)) }}</div>
+            </div>
+            <div>
+              <div class="attr-title">%Adic</div>
+              <div>
+                <ion-input class="mini-input" type="number" (keyup)="updateValues()" [formControl]="item.controls.adicional"/>
+              </div>
+            </div>
+            <div>
+              <div class="attr-title">Total</div>
+              <div>{{ formatCurrency(calcTotal(item.value,control)) }}</div>
+            </div> 
+          </div>
+        </ion-card>
+        <div class="d-flex justify-content-between card-total" *ngIf="control.controls.items.length > 0">
+          Total ({{control.value.nombre}} {{count(control.value.nombre)}})
+          <div>{{formatCurrency(total(control))}}</div>
+        </div>
+      </div>
+
+      <div *ngIf="control != null" class="my-2 bottom-space">
+        Observaciones
+        <ion-textarea (keyup)="updateDescription()"
+        [formControl]="control.controls.descripcion"></ion-textarea>
+      </div>
+  
+      <div class="mt-2" *ngIf="control != null">
+        <ion-accordion-group [multiple]="true" [value]="['image']">
+          <ion-accordion value="image" class="image-list">
+            <ion-item slot="header">
+              {{"Imágenes de la edificacion" | translation:"ma_imagenes"}}
+            </ion-item>
+            <div
+              slot="content"
+              value="image"
+              class="image-element-list px-2"
+              *ngFor="let image of filteredImages();let i = index"
+            >
+              <ion-icon icon="images-outline" />
+              <ion-button color="transparent" class="text-start" (click)="openImage(image)"
+                ><ion-label>{{image.filename}}</ion-label></ion-button
+              >
+              <div>
+                <ion-button color="transparent" (click)="removeImage(image)"
+                  ><ion-icon icon="trash-outline" class="trash-icon"
+                /></ion-button>
+              </div>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>      
+      </div>
+  </div>
+
+</div>
+<div class="bottom-space"></div>

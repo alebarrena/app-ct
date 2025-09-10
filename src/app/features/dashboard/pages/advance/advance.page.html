@@ -1,0 +1,97 @@
+<div class="content">
+  <div class="header">
+    <div>
+      <div class="heading-app">
+        <ion-button (click)="back()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-button>
+        <h1>{{"Inspecciones" | translation:"ho_inspecciones"}}</h1>
+      </div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="title-report">
+      <ion-icon color="primary" name="document-text-outline" /> {{ id }}
+    </div>
+    <div class="stats">
+
+    </div>
+    <h1 class="heading-title">i</h1>
+    <div class="list-features">
+      <ul>
+        <li>
+          <ion-button (click)="goTo('general-background')">
+            <div class="button-content">
+              <div>{{"Antecedentes Generales" | translation: "mo_ag" }}</div>
+              <ion-icon class="trash" name="alert-circle-sharp" *ngIf="false"></ion-icon>
+              <ion-icon class="pending" name="remove-circle-sharp" *ngIf="true"></ion-icon>
+              <ion-icon class="check" name="checkmark-circle" *ngIf="false"></ion-icon>
+            </div>
+          </ion-button>
+        </li>
+        <li>
+          <ion-button>
+            <div class="button-content">
+              <div>{{"Relato asegurado" | translation: "mo_ra"}}</div>
+              <ion-icon class="trash" name="alert-circle-sharp" *ngIf="true"></ion-icon>
+              <ion-icon class="pending" name="remove-circle-sharp" *ngIf="false"></ion-icon>
+              <ion-icon class="check" name="checkmark-circle" *ngIf="false"></ion-icon>
+            </div>
+          </ion-button>
+        </li>
+        <li>
+          <ion-button>
+            <div class="button-content">
+              <div>{{"Tipo Edificacion" | translation: "ma_te"}}</div>
+              <ion-icon class="trash" name="alert-circle-sharp" *ngIf="true"></ion-icon>
+              <ion-icon class="pending" name="remove-circle-sharp" *ngIf="true"></ion-icon>
+              <ion-icon class="check" name="checkmark-circle" *ngIf="true"></ion-icon>
+            </div>
+          </ion-button>
+        </li>
+        <li>
+          <ion-button>
+            <div class="button-content">
+              <div>{{"Sectores Afectados" | translation: "ma_sa"}} </div>
+              <ion-icon class="trash" name="alert-circle-sharp" *ngIf="true"></ion-icon>
+              <ion-icon class="pending" name="remove-circle-sharp" *ngIf="true"></ion-icon>
+              <ion-icon class="check" name="checkmark-circle" *ngIf="true"></ion-icon>
+            </div>
+          </ion-button>
+        </li>
+        <li>
+          <ion-button>
+            <div class="button-content">
+              <div>Datos del edificio</div>
+              <ion-icon class="trash" name="alert-circle-sharp" *ngIf="true"></ion-icon>
+              <ion-icon class="pending" name="remove-circle-sharp" *ngIf="true"></ion-icon>
+              <ion-icon class="check" name="checkmark-circle" *ngIf="true"></ion-icon>
+            </div>
+          </ion-button>
+        </li>
+        <li>
+          <ion-button>
+            <div class="button-content">
+              <div>Datos de contenido</div>
+              <ion-icon class="trash" name="alert-circle-sharp" *ngIf="false"></ion-icon>
+              <ion-icon class="pending" name="remove-circle-sharp" *ngIf="false"></ion-icon>
+              <ion-icon class="check" name="checkmark-circle" *ngIf="true"></ion-icon>
+            </div>
+          </ion-button>
+        </li>
+      </ul>
+    </div>
+    <div>
+      Estado de inspeccion
+      <div>
+        <ion-row>
+          <ion-col><ion-icon class="pending" name="alert-circle-sharp"></ion-icon> Por revisar</ion-col>
+          <ion-col><ion-icon class="incomplete" name="remove-circle-sharp"></ion-icon> Incompleto</ion-col>
+          <ion-col><ion-icon class="finished" name="checkmark-circle"></ion-icon> Finalizado</ion-col>
+        </ion-row>
+        
+      </div>
+    </div>
+  </div>
+</div>
+

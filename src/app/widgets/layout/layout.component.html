@@ -1,0 +1,22 @@
+<div
+  *ngIf="loading"
+  class="layout layout-loader"
+>
+  <div class="text-center">
+    <app-logo/>
+    <div class="mt-1 pt-1 text-white">
+      <ion-progress-bar class="my-1 bg-white" *ngIf="progress<=1" [value]="progress"></ion-progress-bar>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="!loading">
+  <div class="main-wrapper" *ngIf="user && !onboard">
+    <div class="page-wrapper">
+      <div class="page-content">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </div>
+  <ng-content *ngIf="!loading"></ng-content>
+  <app-login *ngIf="(!user) && (isLogin) && (onboard)"></app-login>
+</ng-container>

@@ -1,0 +1,40 @@
+<div>
+  <h5 class="alignLeft padd10"><strong>{{"Escoge y enumera los sectores" | translation: "sa_escoge"}} </strong></h5>
+
+  <ion-accordion-group [multiple]="true" [value]="['first']" class="list-option-items">
+    <ion-accordion value="first">
+      <ion-item slot="header">
+        <ion-label>{{"Sectores principales" | translation: "se_principales"}}</ion-label>
+      </ion-item>–
+      <div slot="content">
+        <ion-card class="sector-check " *ngFor="let item of main_sectors">
+          <div class="sector-icon mx-1"  (click)="handleMainUpdated(1,item)">
+            <ion-icon name="square-outline" class="icon-check" size="50" *ngIf="item.value == 0 || item.value == null" />
+            <ion-icon name="checkbox" class="icon-check" size="50"  *ngIf="item.value>0" />
+          </div>
+           <ion-icon size="50"
+            class="sector-icon mr-1" [icon]="item.icon" />
+          <div class="check-label"><strong>{{item.label | translation:item.tag }}</strong></div> <div class="incremental-space"><app-incremental *ngIf="visible_count" [initial]="item.value?item.value:0" (onUpdated)="handleMainUpdated($event,item)"/></div>
+        </ion-card>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+  <ion-accordion-group [multiple]="true" [value]="['first']"  class="list-option-items mt-2 bottom-space">
+    <ion-accordion value="second">
+      <ion-item slot="header">
+        <ion-label>{{"Sectores secundarios" | translation: "se_secundarios"}}</ion-label>
+      </ion-item>
+      <div slot="content">
+        <ion-card class="sector-check" *ngFor="let item of secondary_sectors">
+          <div class="sector-icon mx-1"  (click)="handleMainUpdated(1,item)">
+            <ion-icon name="square-outline" class="icon-check" size="50" *ngIf="item.value == 0 || item.value == null" />
+            <ion-icon name="checkbox" class="icon-check" size="50"  *ngIf="item.value>0" />
+          </div>
+           <ion-icon size="50"
+            class="sector-icon mr-1" [icon]="item.icon" />
+          <div class="check-label"><strong>{{item.label | translation:item.tag }}</strong></div> <div class="incremental-space"><app-incremental *ngIf="visible_count" [initial]="item.value?item.value:0" (onUpdated)="handleMainUpdated($event,item)"/></div>
+          </ion-card>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+</div>

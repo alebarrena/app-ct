@@ -1,0 +1,90 @@
+<ion-content class="v-100">
+  <div class="version-container">
+    Version: 1.10
+  </div>
+  <div class="content">
+    <div class="header">
+      <div>
+        <app-logo [size]="200" />
+        <div class="subtitle">{{ "Liquidación de seguros"| translation:"lo_Titprincipal"}}</div>
+      </div>
+    </div>
+    <div class="body">
+      <div class="title">
+        <h1>{{ 'Login--' | translation:"lo_titulo"}}</h1>
+        <div>{{ 'Bienvenido--' | translation:"lo_bienvenido"}}</div>
+      </div>
+      <form (submit)="onSubmit($event)" [formGroup]="formAuth">
+        <ion-list lines="none" class="login-form">
+          <ion-item>
+            <ion-input
+              type="text"
+              fill="solid"
+              formControlName="username"
+              [errorText]="'Error' | translation:'err_email'"
+            >
+              <ion-icon
+                slot="start"
+                name="person-circle-outline"
+                aria-hidden="true"
+                class="icon-24"
+              ></ion-icon>
+              <ion-label position="floating"
+                >{{ 'Usuario' | translation:"lo_usuario" }}</ion-label
+              >
+            </ion-input>
+            <div class="error-message" *ngIf="error">
+              {{ 'Error' | translation:"err_email" }}
+            </div>
+          </ion-item>
+          <ion-item class="mt-1 pt-1">
+            <ion-input
+              fill="solid"
+              [type]="password_hidden?'password':'text'"
+              formControlName="password"
+            >
+              <ion-icon
+                slot="start"
+                name="lock-closed"
+                aria-hidden="true"
+                class="icon-24"
+              ></ion-icon>
+              <ion-label position="floating"
+                >{{ 'Contraseña' | translation:"lo_contraseña" }}</ion-label
+              >
+              <ion-button
+                fill="clear"
+                color="secondary"
+                slot="end"
+                class="icon-24"
+                aria-label="Show/hide"
+                (click)="password_hidden=!password_hidden"
+              >
+                <ion-icon
+                  slot="icon-only"
+                  [name]="!password_hidden?'eye':'eye-off'"
+                  aria-hidden="true"
+                  class="icon-24"
+                ></ion-icon>
+              </ion-button>
+            </ion-input>
+            <div class="error-message" *ngIf="error">
+              {{ 'Error' | translation:'err_email' }}
+            </div>
+          </ion-item>
+        </ion-list>
+        <div class="button-wrapper">
+          <ion-button
+            expand="block"
+            [disabled]="formAuth.invalid || loading"
+            class="login-button"
+            type="submit"
+            ><span *ngIf="!loading">{{ 'Iniciar sesion' | translation:"lo_iniciar"}}</span> <ion-spinner *ngIf="loading" name="dots"></ion-spinner></ion-button
+          >
+        </div>
+      </form>
+    </div>
+  </div>
+  <div>
+  </div>
+</ion-content>

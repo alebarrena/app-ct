@@ -1,0 +1,519 @@
+<div class="building-buttons-wrapper mt-2">
+  <ion-button
+    color="transparent"
+    [class.active]="selectedSegment == 'contenidos'"
+    (click)="onSegmentChanged('contenidos')"
+  >
+    <div class="text-center">
+      <ion-icon icon="document-text-outline" />
+      <div>
+        <span>{{ "Contenidos" | translation }}</span>
+      </div>
+    </div>
+  </ion-button>
+  <ion-button
+    color="transparent"
+    [class.active]="selectedSegment == 'terceros'"
+    (click)="onSegmentChanged('terceros')"
+  >
+    <div class="text-center">
+      <ion-icon icon="people-outline" />
+      <div>
+        <span>{{ "Terceros" | translation }}</span>
+      </div>
+    </div>
+  </ion-button>
+  <ion-button
+    color="transparent"
+    [class.active]="selectedSegment == 'judiciales'"
+    (click)="onSegmentChanged('judiciales')"
+  >
+    <div class="text-center">
+      <ion-icon icon="briefcase-outline" />
+      <div>
+        <span>{{ "Judiciales" | translation : "dc_judiciales" }}</span>
+      </div>
+    </div>
+  </ion-button>
+  <ion-button
+    color="transparent"
+    [class.active]="selectedSegment == 'solicitados'"
+    (click)="onSegmentChanged('solicitados')"
+  >
+    <div class="text-center">
+      <ion-icon icon="checkmark-done-outline" />
+      <div>
+        <span>{{ "Solicitados" | translation : "dc_solicitados" }}</span>
+      </div>
+    </div>
+  </ion-button>
+</div>
+<div [ngSwitch]="selectedSegment" class="content-damage-form">
+  <div *ngSwitchCase="'contenidos'" class="mt-2">
+    <h5 class="text-start w-100">
+      {{ "Daños de contenido" | translation : "dc_danos_contenido" }}
+    </h5>
+    <ion-card class="card">
+      <form [formGroup]="contenidoFormGroup">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12">
+              <div
+                class="d-flex justify-content-center align-items-center input-container"
+              >
+                <ion-input
+                  class="w-100 text-start"
+                  type="email"
+                  formControlName="producto"
+                  name="producto"
+                  labelPlacement="floating" 
+                  required
+                >
+                  <div slot="label">
+                    {{ "Producto" | translation : "dc_nombre" }}
+                  </div>
+                </ion-input>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <div class="d-flex align-items-center">
+                <div
+                  class="d-flex justify-content-center align-items-center input-container mr-1"
+                >
+                  <div>
+                    <ion-input
+                      class="w-100 text-start"
+                      formControlName="marca"
+                      name="marca"
+                      labelPlacement="floating" 
+                      required
+                    >
+                      <div slot="label">
+                        {{ "Marca" | translation : "dc_marca" }}
+                      </div></ion-input
+                    >
+                  </div>
+                </div>
+                <div class="separator"></div>
+                <div
+                  class="d-flex justify-content-center align-items-center input-container ml-1"
+                >
+                  <div>
+                    <ion-input
+                      class="w-100 text-start"
+                      formControlName="modelo"
+                      name="modelo"
+                      labelPlacement="floating" 
+                    >
+                      <div slot="label">
+                        {{ "Modelo" | translation : "dc_modelo" }}
+                      </div></ion-input
+                    >
+                  </div>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="w-100">
+              {{ "Cantidad" | translation : "dc_cantidad" }}
+              <div class="w-100 d-flex justify-content-center mt-1 mb-2">
+                <app-incremental
+                  *ngIf="updated"
+                  [control]="contenidoFormGroup.controls.cantidad"
+                ></app-incremental>
+              </div>
+            </div>
+            <div class="w-100">
+              <ion-button
+                expand="full"
+                [disabled]="contenidoFormGroup.invalid"
+                (click)="add()"
+                ><span class="text-primary"
+                  >+ {{ "Agregar" | translation : "dc_agregar" }}</span
+                ></ion-button
+              >
+            </div>
+          </div>
+        </ion-grid>
+      </form>
+
+      <h5 class="w-100 text-start mx-1" *ngIf="products.length > 0">
+        {{ "Productos agregados" | translation : "dc_productos_agregados" }}
+      </h5>
+      <div class="px-2 pb-2 mb-2">
+        <div
+          class="d-flex justify-content-between w-100 align-items-center"
+          *ngFor="let product of products; let i = index"
+        >
+          <div class="w-100 d-flex">
+            <div class="w-100">
+              <h5 class="p-0 text-start">{{ product.nombre }}</h5>
+              <div class="d-flex">
+                <div class="border-right pr-1 text-12">
+                  {{ product.marca_modelo.split("|")[0] }}
+                </div>
+                <div class="text-start pl-1 text-12">
+                  {{ product.marca_modelo.split("|")[1] }}
+                </div>
+              </div>
+            </div>
+            <div class="text-center px-2">
+              <h5 class="p-0">Cantidad</h5>
+              <div class="text-12">
+                {{ product.cantidad }}
+              </div>
+            </div>
+          </div>
+          <div class="w-50p">
+            <ion-button (click)="removeProduct(product.id)"
+              ><ion-icon icon="trash-outline" class="icon-24" color="danger"
+            /></ion-button>
+          </div>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+
+  <div *ngSwitchCase="'terceros'" class="mt-2">
+    <div class="d-flex justify-content-between align-items-center my-2">
+      <ion-label class="text-12">{{'¿Se han involucrado terceros?' | translation:"cd_terceros"}}</ion-label>
+      <ion-toggle mode="md" class="toggle-damage-content"  [checked]="showForm1" (ionChange)="toggleForm1($event)"></ion-toggle>
+    </div>
+    <div *ngIf="showForm1">
+      <ion-list>
+        <div class="input-container d-flex">
+          <ion-icon name="person-outline" class="mr-1 icon-terceros" slot="start"></ion-icon>
+          <ion-input
+            class="text-start"
+            labelPlacement="floating"
+            [formControl]="tercerosFormGroup.controls.nombre"
+            required
+          >
+            <div slot="label" class="label-terceros">
+              {{ "Nombre" | translation : "dc_nombre" }}
+            </div></ion-input
+          >
+        </div>
+        <div class="input-container d-flex">
+          <ion-icon name="call-outline" class="mr-1 icon-terceros" slot="start"></ion-icon>
+          <ion-input
+            class="text-start"
+            labelPlacement="floating"
+            type="tel"
+            [formControl]="tercerosFormGroup.controls.telefono"
+            
+          >
+            <div slot="label" class="label-terceros">
+              {{ "Telefono" | translation : "dc_telefono" }}
+            </div></ion-input
+          >
+        </div>
+        <div class="input-container d-flex">
+          <ion-icon name="mail-outline" class="mr-1 icon-terceros" slot="start"></ion-icon>
+          <ion-input
+            type="email"
+            labelPlacement="floating"
+            class="text-start"
+            [formControl]="tercerosFormGroup.controls.correo"
+            [errorText]="'error_email' | translation : 'error_email'"
+            
+          >
+            <div slot="label" class="label-terceros">
+              {{ "Correo" | translation : "cd_correo" }}
+            </div></ion-input
+          >
+        </div>
+        <div class="input-container d-flex">
+          <ion-icon name="home-outline" class="mr-1 icon-terceros" slot="start"></ion-icon>
+          <ion-input
+            class="text-start"
+            labelPlacement="floating"
+            [formControl]="tercerosFormGroup.controls.direccion"
+            required
+          >
+            <div slot="label" class="label-terceros">
+              {{ "Direccion" | translation : "dc_direccion" }}
+            </div></ion-input
+          >
+        </div>
+        <div class="input-container d-flex">
+          <ion-icon name="file-tray-outline" class="mr-1 icon-terceros" slot="start"></ion-icon>
+          <ion-input
+            class="text-start"
+            labelPlacement="floating"
+            [formControl]="tercerosFormGroup.controls.observacion"
+            required
+          >
+            <div slot="label" class="label-terceros">
+              {{ "Observacion" | translation : "dc_observacion" }}
+            </div></ion-input
+          >
+        </div>
+      </ion-list>
+      <div class="w-100">
+        <ion-button
+          expand="full"
+          [disabled]="tercerosFormGroup.invalid"
+          (click)="addTercero()"
+          ><span class="text-primary"
+            >+ {{ "Agregar" | translation : "dc_agregar" }}</span
+          ></ion-button
+        >
+      </div>
+    </div>
+
+    <div *ngIf="tercerosList.length > 0">
+      <ion-card *ngFor="let tercero of tercerosList" class="card card-grey">
+        <div class="mt-2">
+          <h1
+            class="mx-2 d-flex text-dark justify-content-between align-items-center"
+          >
+            {{ tercero.nombre }}
+            <ion-button
+              (click)="removeTercero(tercero.id)"
+              color="transparent"
+              class="close-button p-0"
+              ><ion-icon icon="close-outline"
+            /></ion-button>
+          </h1>
+        </div>
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="6" *ngIf="tercero.telefono!=''"
+              ><h5>{{ "Teléfono" | translation : "dc_telefono" }}:</h5>
+              {{ tercero.telefono }}</ion-col
+            >
+            <ion-col size="6" *ngIf="tercero.correo!=''"
+              ><h5>{{ "Correo" | translation : "dc_correo" }}:</h5>
+              {{ tercero.correo }}</ion-col
+            >
+            <ion-col size="12"
+              ><h5>{{ "Teléfono" | translation : "dc_direccion" }}:</h5>
+              {{ tercero.direccion }}</ion-col
+            >
+            <ion-col size="12"
+              ><h5>{{ "Observacion" | translation : "dc_observacion" }}:</h5>
+              {{ tercero.observacion }}</ion-col
+            >
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'judiciales'" class="mt-2">
+    <div class="my-2 d-flex justify-content-between align-items-center">
+      <ion-label class="text-12">{{
+        "¿Desea agregar información judicial?"
+          | translation : "dc_informacion_judicial"
+      }}</ion-label>
+      <ion-toggle mode="md" [checked]="showForm2" class="toggle-damage-content"  (ionChange)="toggleForm2($event)"></ion-toggle>
+    </div>
+    <div *ngIf="showForm2">
+      <div class="card-feature bordergray">
+        <h5>
+          {{ "Formulario Judicial" | translation : "dc_formulario_judicial" }}
+        </h5>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <div class="input-container">
+                <ion-input
+                  name="unidadPolicial"
+                  class="text-start"
+                  labelPlacement="floating"
+                  [formControl]="judicialesForm.controls.unidad_policial"
+                  (keyup)="guardarJudiciales()"
+                  required
+                >
+                  <div slot="label" class="label-terceros">
+                    {{ "Unidad policial" | translation : "dc_unidad_policial" }}
+                  </div>
+                </ion-input>
+              </div>
+            </ion-col>
+            <ion-col size="6">
+              <div class="input-container">
+                <ion-input
+                  class="text-start"
+                  labelPlacement="floating"
+                  name="nParte"
+                  [formControl]="judicialesForm.controls.n_parte"
+                  (keyup)="guardarJudiciales()"
+                  required
+                >
+                  <div slot="label" class="label-terceros">
+                    {{ "N° Parte" | translation : "dc_n_parte" }}
+                  </div>
+                </ion-input>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="12">
+              <div class="input-container">
+                <ion-input
+                  type="email"
+                  name="cuerpoBombero"
+                  class="text-start"
+                  labelPlacement="floating"
+                  (keyup)="guardarJudiciales()"
+                  [formControl]="judicialesForm.controls.cuerpo_bombero"
+                  required
+                >
+                  <div slot="label" class="label-terceros">
+                    {{
+                      "Cuerpo de bombero" | translation : "dc_cuerpo_bombero"
+                    }}
+                  </div></ion-input
+                >
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <div class="input-container">
+                <ion-input
+                  name="denunciante"
+                  class="text-start"
+                  labelPlacement="floating"
+                  [formControl]="judicialesForm.controls.nombre_denunciante"
+                  (keyup)="guardarJudiciales()"
+                  required
+                >
+                  <div slot="label" class="label-terceros">
+                    {{
+                      "Nombre denunciante"
+                        | translation : "dc_nombre_denunciante"
+                    }}
+                  </div></ion-input
+                >
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'solicitados'">
+    <div class="bordergray my-2">
+      <div class="px-2">
+        <h5 class="text-start w-100">
+          {{ "Otros seguros comprometidos" | translation : "dc_otros_seguros" }}
+        </h5>
+        <div class="list-option-items">
+          <ion-accordion-group>
+            <ion-accordion>
+              <ion-item slot="header">
+                <ion-label *ngIf="aseguradoraSeleccionada==null">{{
+                  "Selecciona Compañía" | translation : "dc_seleccion_compania"
+                }}</ion-label>
+                <ion-label *ngIf="aseguradoraSeleccionada!=null">{{aseguradoraSeleccionada.aseguradora}}</ion-label>
+              </ion-item>
+              <div slot="content" class="list-companies-items">
+                <ion-list class="list-option-items">
+                  <ion-item>
+                    <ion-button
+                      color="transparent"
+                      class="d-flex justify-content-start"
+                      (click)="selectAseguradora({id:0,aseguradora:'No posee Otros Seguros'})"
+                    >
+                      <div>
+                      </div>
+                      <div class="w-100 text-start">{{ "No posee Otros Seguros" | translation:"dc_no_seguros"}}</div>
+                    </ion-button>
+                  </ion-item>
+                  <ion-item *ngFor="let item of companias">
+                    <ion-button
+                      color="transparent"
+                      class="d-flex justify-content-start"
+                      (click)="selectAseguradora(item)"
+                    >
+                      <div *ngIf="aseguradoraSeleccionada!=null">
+                        <ion-icon
+                          icon="ellipse-outline"
+                          size="30px"
+                          *ngIf="item.id != aseguradoraSeleccionada.id"
+                        ></ion-icon>
+                        <ion-icon
+                          icon="checkmark-circle-outline"
+                          size="30px"
+                          *ngIf="item.id == aseguradoraSeleccionada.id"
+                        ></ion-icon>
+                      </div>
+                      <div class="w-100 text-start">{{ item.aseguradora }}</div>
+                    </ion-button>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </div>
+      </div>
+    </div>
+    <div class="bordergray">
+      <div class="px-2">
+        <h5 class="w-100 text-start">{{
+            "Documentos requeridos" | translation : "dc_documentos_requeridos"
+          }}
+        </h5>
+        <div class="list-option-items">
+          <ion-accordion-group>
+            <ion-accordion>
+              <ion-item slot="header">
+                <ion-label *ngIf="documentosSeleccionados.length==0">{{
+                  "Selecciona documento"
+                    | translation : "dc_selecciona_documento"
+                }}</ion-label>
+
+          <ion-label *ngIf="documentosSeleccionados.length>0">
+            {{
+              "Documentos seleccionados" | translation : "dc_documentos_seleccionados":{numero:documentosSeleccionados.length}
+            }}
+          </ion-label >
+              </ion-item>
+              <div slot="content" class="list-companies-items">
+                <ion-list class="list-option-items">
+                  <ion-item *ngFor="let item of documentos">
+                    <ion-button
+                      color="transparent"
+                      class="d-flex justify-content-start"
+                      (click)="selectDocumento(item)"
+                    >
+                      <div>
+                        <ion-icon
+                          icon="square-outline"
+                          size="30px"
+                          *ngIf="!checkDocumento(item)"
+                        ></ion-icon>
+                        <ion-icon
+                          icon="checkbox-outline"
+                          size="30px"
+                          *ngIf="checkDocumento(item)"
+                        ></ion-icon>
+                      </div>
+                      <div class="w-100 text-start">{{ item.documento }}</div>
+                    </ion-button>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </div>
+      </div>
+    </div>
+    <div *ngSwitchDefault>
+      <p>
+        {{
+          "Selecciona una opción del menú." | translation : "dc_selecciona_menu"
+        }}
+      </p>
+    </div>
+  </div>
+</div>
+<div class="bottom-space"></div>

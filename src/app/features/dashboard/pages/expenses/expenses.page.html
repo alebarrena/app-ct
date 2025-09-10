@@ -1,0 +1,65 @@
+<app-page-layout [title]='"Gastos" | translation:"ho_gastos"'>
+  <div class="inspection-wrap-container">
+    <!--<div class="search-input">
+      <ion-input
+        type="text"
+        [placeholder]="'Buscar' | translation:'mi_buscar' "
+        fill="solid"
+        (input)="onSubmit($event)"
+      >
+        <ion-icon
+          slot="start"
+          name="search-outline"
+          aria-hidden="true"
+          class="text-md"
+        ></ion-icon>
+      </ion-input>
+    </div>-->
+    <div class="mx-1">
+      <div
+        class="d-flex justify-content-between align-items-center title-inspections mb-3"
+      >
+        <div>
+          <h2 class="mb-0 me-2">{{"Gastos"|translation:"mi_gastos"}}</h2>
+          
+        </div>
+        <ion-button
+        style="width: 100px;"
+            color="primary"
+            (click)="agregarGasto()"
+          >
+            Agregar
+          </ion-button>
+      </div>
+    </div>
+    <div>
+      <ion-list lines="none" class="inspection-list mt-2">
+        <ion-item *ngFor="let gasto of gastosEjemplo">
+          <ion-button class="p-0 m-0 text-dark" (click)="verDetalle(gasto)">
+            <ion-label>
+              <div class="d-flex justify-content-between">
+                <div class="w-100 text-start">
+                  <h5>{{ gasto.descripcion }}</h5>
+                  <h6 class="text-muted">{{ gasto.fecha | date:'dd/MM/yyyy'}}</h6>
+                </div>
+                <div>
+                  <h2>{{ gasto.monto | currency:'USD':'symbol':'1.2-2' }}</h2>
+                </div>
+              </div>
+            </ion-label>
+          </ion-button>
+        </ion-item>
+        <ion-item>
+          <div class="d-flex justify-content-between w-100">
+            <div>Total</div>
+            <span class="text-primary"
+              > {{ getTotalGastos() | currency:'USD':'symbol':'1.2-2'
+              }}</span
+            >
+          </div>
+        </ion-item>
+      </ion-list>
+      <!-- El botón de agregar ya está junto al título -->
+    </div>
+  </div>
+</app-page-layout>

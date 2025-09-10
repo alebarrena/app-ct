@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <XML_WS_SINIESTROS_ARCHIVOS_ADD xmlns="http://tempuri.org/">
+      <fileName>ARCHIVO.webp</fileName>
+      <fs>aaaaa</fs>
+      <nro_carpeta>378410</nro_carpeta>
+      <cod_inspeccion>CAR-0017693-HIB001-A</cod_inspeccion>
+      <id_accion>378411</id_accion>
+      <contenttype>image/webp</contenttype>
+      <ubicacion></ubicacion>
+    </XML_WS_SINIESTROS_ARCHIVOS_ADD>
+  </soap:Body>
+</soap:Envelope>

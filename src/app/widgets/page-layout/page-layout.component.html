@@ -1,0 +1,14 @@
+<div class="content">
+  <ion-header no-border>
+    <ion-toolbar class="page-layout-toolbar">
+      <ion-buttons slot="start" class="page-layout-toolbar-buttons" (click)="historyBack()">
+        <ion-button > <ion-icon icon="chevron-back-outline"/> </ion-button>
+      </ion-buttons>
+      <ion-title>{{ title }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <div class="page-layout-content">
+      <ng-content></ng-content>
+    </div>
+  </ion-content>

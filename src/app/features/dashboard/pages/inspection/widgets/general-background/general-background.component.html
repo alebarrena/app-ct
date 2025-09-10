@@ -1,0 +1,165 @@
+<div>
+  <form *ngIf="form!=null" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-inspection-wrapper">
+      <h4><strong>{{'Detalles del asegurado' | translation:"mg_detalle"}}</strong></h4>
+      <ion-input
+        [disabled]="true"
+        labelPlacement="floating"
+        [value]="formatDate(current_date)"
+      >
+        <div slot="label">{{"Fecha inspeccion" | translation: "mg_fecha"}}</div>
+      </ion-input>
+  
+      <ion-input
+        [disabled]="true"
+        labelPlacement="floating"
+        [value]="formatHours(current_date)"
+      >
+        <div slot="label">{{"Hora" | translation: "mg_hora"}}</div>
+      </ion-input>
+      <!--  [disabled]="formMain.value.id_accion != ''" -->
+      <ion-input
+        labelPlacement="floating"  
+        type="number"
+        [value]="form.controls.detallesAsegurado.controls.nro_carpeta.value"
+        [formControl]="form.controls.detallesAsegurado.controls.nro_carpeta"
+      >
+        <div slot="label">{{"Carpeta" | translation: "mg_carpeta"}}</div>
+      </ion-input>
+      <!--[disabled]="formMain.value.id_accion != ''" -->
+      <ion-input
+        labelPlacement="floating" 
+        [value]="form.controls.numSiniestro.value"
+        [formControl]="form.controls.numSiniestro"
+      >
+        <div slot="label">{{"Siniestro"| translation: "mg_siniestro"}}</div>
+      </ion-input>
+  
+      <!--[disabled]="formMain.value.id_accion != ''" -->
+      <ion-input
+        labelPlacement="floating"
+        [value]="form.controls.detallesAsegurado.controls.asegurado_aseguradora.value" 
+        [formControl]="form.controls.detallesAsegurado.controls.asegurado_aseguradora"
+      >
+        <div slot="label">{{"Compañía" | translation: "mg_compañia"}}</div>
+      </ion-input>
+  
+      <!--[disabled]="formMain.value.id_accion != ''" -->
+      <ion-input
+        labelPlacement="floating" 
+        [value]="form.controls.detallesAsegurado.controls.nomLiquidador.value"
+        [formControl]="form.controls.detallesAsegurado.controls.nomLiquidador"  errorText="Es necesario el corredor"
+      >
+        <div slot="label">{{"Liquidador" | translation: "mg_liquidador"}}</div>
+      </ion-input>
+      <!--[disabled]="formMain.value.id_accion != ''" -->
+      <ion-input
+        labelPlacement="floating"  
+        [value]="form.controls.detallesAsegurado.controls.asegurado_nombre.value"
+        [formControl]="form.controls.detallesAsegurado.controls.asegurado_nombre"
+      >
+        <div slot="label">{{"Asegurado" | translation: "mg_asegurado"}}</div>
+      </ion-input>
+      <!--[disabled]="formMain.value.id_accion != ''" -->
+      <ion-input
+        labelPlacement="floating"  
+        [value]="form.controls.detallesAsegurado.controls.asegurado_rut.value"
+        [formControl]="form.controls.detallesAsegurado.controls.asegurado_rut"
+      >
+        <div slot="label">{{"RUT del Asegurado" | translation: "mg_asegurado_rut"}}</div>
+      </ion-input>
+             <!--TODO: colocar como numérico-->
+      <ion-input labelPlacement="floating"  type="tel" errorText="Teléfono inválido"
+     [formControl]="form.controls.detallesAsegurado.controls.asegurado_fono">
+        <div slot="label">{{"Teléfono" | translation: "mg_telefono"}} *</div>
+      </ion-input>
+         <!--TODO: colocar como email-->
+      <ion-input labelPlacement="floating" [formControl]="form.controls.detallesAsegurado.controls.asegurado_email" type="email" [errorText]="'Correo inválido' | translation:'error_email' ">
+        <div slot="label">{{"Correo" | translation: "mg_correo"}} *</div>
+      </ion-input>
+  
+      <h4><strong>{{"Datos del siniestro" | translation: "mg_datos_siniestro"}}</strong></h4>
+  
+      <ion-input
+        labelPlacement="floating"  
+        [formControl]="form.controls.datosSiniesto.controls.nomTipoSiniestro"
+      >
+        <div slot="label">{{"Tipo de siniestro" | translation: "mg_tipo"}} *</div>
+      </ion-input>
+      <!--TODO: colocar fecha como datepicker-->
+      <ion-input labelPlacement="floating" [max]="limitDate"  [formControl]="form.controls.datosSiniesto.controls.fechaSiniestro" type="date" errorText="Fecha inválida">
+        <div slot="label">{{"Fecha del siniestro" | translation: "mg_fecha_siniestro"}} *</div>
+      </ion-input>
+      
+      <!--<div slot="label">Fecha del siniestro</div>
+      <ion-datetime-button datetime="datetime"></ion-datetime-button>
+
+      <ion-modal [keepContentsMounted]="true">
+        <ng-template>
+          <ion-datetime id="datetime" ></ion-datetime>
+        </ng-template>
+      </ion-modal>-->
+
+
+      <ion-input
+        labelPlacement="floating"
+        
+      [formControl]="form.controls.datosSiniesto.controls.direccion_siniestro" 
+      >
+        <div slot="label">{{"Dirección siniestrada" | translation: "mg_direccion"}} *</div>
+      </ion-input>
+  
+      <ion-input labelPlacement="floating" 
+      [formControl]="form.controls.detallesAsegurado.controls.asegurado_comuna"  >
+        <div slot="label">{{"Comuna" | translation: "mg_comuna"}} *</div>
+      </ion-input>
+      <ion-input labelPlacement="floating" 
+      [formControl]="form.controls.detallesAsegurado.controls.asegurado_ciudad"  >
+        <div slot="label">{{"Ciudad" | translation: "mg_ciudad"}} *</div>
+      </ion-input>
+
+      <h4><strong>{{"Datos del contacto" | translation: "mg_datos_contacto"}}</strong></h4>
+
+      <ion-input labelPlacement="floating" 
+      [formControl]="form.controls.datosContacto.controls.contacto_nombre" >
+        <div slot="label">{{"Nombre" | translation: "mg_nombre_contacto"}} *</div>
+      </ion-input>
+       <!--TODO: colocar como numérico-->
+      <ion-input labelPlacement="floating"  type="tel"
+      [formControl]="form.controls.datosContacto.controls.contacto_fono" [errorText]="'Formato incorrecto' | translation:'error_phone'">
+        <div slot="label">{{"Teléfono" | translation: "mg_telefono_contacto"}} *</div>
+      </ion-input>
+
+      <h4><strong>{{"Datos del entrevistado" | translation: "mg_datos_entrevistado"}}</strong></h4>
+  
+      <ion-input labelPlacement="floating"
+      [formControl]="form.controls.datosEntrevistado.controls.entrevistadoNombre" [errorText]="'Campo requerido' | translation:'error_nombre_entrevistado'" >
+        <div slot="label">{{"Nombre" | translation: "mg_nombre_entrevistado"}} *</div>
+      </ion-input>
+      <ion-textarea labelPlacement="floating" class="text-start"
+      [formControl]="form.controls.datosEntrevistado.controls.entrevistadoRelacion" [errorText]="'Campo requerido' | translation:'error_relacion_entrevistado'" >
+        <div slot="label">{{"Relación con el asegurado" | translation: "mg_relacion"}} *</div>
+      </ion-textarea>
+      
+  
+      <h4><strong>{{"Datos de la Comunidad" | translation: "mg_datos_comunidad"}}</strong></h4>
+      
+      <ion-input labelPlacement="floating"
+      [formControl]="form.controls.datosComunidad.controls.admin_mayor_domo">
+        <div slot="label">{{"Mayordomo" | translation: "mg_mayordomo"}}</div>
+      </ion-input>
+      <ion-input labelPlacement="floating" [errorText]="'Correo inválido' | translation:'error_email' "
+      [formControl]="form.controls.datosComunidad.controls.email_comunidad">
+        <div slot="label">{{"Correo" | translation: "mg_correo_comunidad"}}</div>
+      </ion-input>
+      <ion-textarea labelPlacement="floating"  class="text-start"
+      [formControl]="form.controls.datosComunidad.controls.observaciones">
+        <div slot="label">{{"Observaciones" | translation: "mg_observaciones"}}</div>
+      </ion-textarea>
+    </div>
+    <div class="pb-2 pt-2">
+      <ion-button color="primary" type="submit">{{'Guardar' | translation:"mg_guardar"}}</ion-button>
+    </div>
+  </form>
+
+</div>

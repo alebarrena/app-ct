@@ -1,0 +1,19 @@
+<div class="">
+  <div class="list-features">
+    <ul>
+      <li *ngFor="let mod of modules">
+        <ion-button (click)="goTo(mod.name)">
+          <div class="button-content py-1">
+            <div>{{ mod.label | translation: mod.tag }}</div>
+            <div>
+              <ion-icon
+              [class]="checkStyle(mod)"
+              [name]="checkName(mod)"
+            ></ion-icon>
+            </div>
+          </div>
+        </ion-button>
+      </li>
+    </ul>
+  </div>
+</div>

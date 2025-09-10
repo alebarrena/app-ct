@@ -1,0 +1,6 @@
+
+<div class="bg-white">
+  <canvas #imageCanvas (mousedown)="startDrawing($event)" (touchstart)="startDrawing($event)" (touchmove)="moved($event)"
+  (touchmove)="moved($event)" (mousemove)="moved($event)" (mouseup)="endDrawing()" (touchend)="endDrawing()"></canvas>  
+</div>
+<ion-button color="transparent" class="text-primary" (click)="exportCanvasImage()">Agregar firma</ion-button>

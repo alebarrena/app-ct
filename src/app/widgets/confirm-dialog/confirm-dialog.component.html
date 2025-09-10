@@ -1,0 +1,10 @@
+<div class="confirm-dialog">
+  <div class="px-2 py-2">
+  <h3>{{ data.title | translation:data.title_tag}}</h3>
+  <p>{{ data.message | translation:data.messge_tag}}</p>
+  </div>
+  <div class="d-flex">
+    <ion-button (click)="decline()">{{  "CANCELAR" | translation:data.cancel_button}}</ion-button>
+    <ion-button class="delete" (click)="accept()">{{  "ELIMINAR" | translation:data.success_button}}</ion-button>
+  </div>
+</div>

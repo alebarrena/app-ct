@@ -1,0 +1,99 @@
+<div class="content">
+  <div class="header">
+    <div>
+      <div class="heading-app text-center">
+        <app-logo [size]="150" />
+      </div>
+      <div>
+        <!--TODO: Multiidioma,hay un body que coloca todo centrado, deberia ser el centrado una propiedad, por que esta tomando incluso los inputs-->
+        <h5 class="colorWhite">
+          {{"Sistema de Inspecciones--" | translation:"ho_sistema"}}
+        </h5>
+        <h3 class="colorWhite">
+          <strong
+            >{{"¡Hola Inspector" |
+            translation:"ho_hola":{"Inspector":profile?.nomInspector} }}</strong
+          >
+        </h3>
+        <!--TODO: Esto debe venir en el srevicio-->
+        <h5 class="colorWhite">
+          {{"Perfil: Inspector / Liquidador" |
+          translation:"ho_perfil1":{"Inspector":profile?.nomInspector} }}
+        </h5>
+      </div>
+    </div>
+  </div>
+  <div class="body">
+    <div class="d-flex align-items-center dashboard-wrapper" *ngIf="!login">
+      <app-login-dialog/>
+    </div>
+    <div class="d-flex align-items-center dashboard-wrapper" *ngIf="login">
+
+    <div>
+      <h2 class="primaryColor">
+        {{"Para hoy" | translation:"ho_para":{date:(current_date |
+        date:"dd/MM/Y")} }}
+      </h2>
+      <div class="f-14">
+        <h5>
+          {{"Tienes nn inspecciones por realizar," |
+          translation:"ho_numero":{nn:list.length.toString().padStart(2,"0")} }}
+        </h5>
+        <h5>{{"¡Vamos a empezar!" | translation:"ho_vamos" }}</h5>
+      </div>
+    </div>
+      <div class="v-100 d-flex align-items-center">
+        <div>
+          <h3>{{"Inspecciones" | translation:"ho_inspecciones" }}</h3>
+          <h5>{{"Resumen de inspecciones" | translation:"ho_resumen"}}</h5>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-button
+                  className="p-0"
+                  [disabled]="loading"
+                  [routerLink]="['/inspections']"
+                  fragment="pending"
+                >
+                  <div class="stat w-100">
+                    <h1 class="fw-800">{{ list.length }}</h1>
+                    <strong>
+                      {{"Pendientes" | translation:"ho_pendientes"}}</strong
+                    >
+                  </div>
+                </ion-button>
+              </ion-col>
+              <ion-col>
+                <ion-button
+                  className="p-0"
+                  [disabled]="loading"
+                  [routerLink]="['/inspections']"
+                  fragment="finished"
+                >
+                  <div class="stat w-100">
+                    <h1 class="fw-800">{{ finished.length }}</h1>
+                    <strong>
+                      {{"Finalizadas" | translation:"ho_finalizadas" }}</strong
+                    >
+                  </div>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </div>
+
+      <div class="dashboard-button-wrapper">
+        <ion-button
+          shape="round"
+          [routerLink]="['/inspections']"
+          [disabled]="loading"
+          ><ion-icon name="chevron-forward-outline" color="light" /> {{"Ir a Inspecciones" | translation:"ho_boton"}}
+        </ion-button>
+      </div>
+      <div *ngIf="!login">
+        <app-login-dialog/>
+      </div>
+    </div>
+  </div>
+</div>

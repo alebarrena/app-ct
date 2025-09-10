@@ -1,0 +1,11 @@
+<div class="incremental">
+  <ion-button class="add-btn" fill="transparent" (click)="minus()">
+    <ion-icon *ngIf="plusminus" name="remove-outline"></ion-icon>
+    <ion-icon *ngIf="!plusminus" name="chevron-back-outline"></ion-icon>
+  </ion-button>
+  <div class="w-100 text-center">{{ value }}{{ suffix }}</div>
+  <ion-button class="add-btn" fill="transparent" (click)="plus()">
+    <ion-icon *ngIf="plusminus" name="add-outline"></ion-icon>
+    <ion-icon *ngIf="!plusminus" name="chevron-forward-outline"></ion-icon>
+  </ion-button>
+</div>

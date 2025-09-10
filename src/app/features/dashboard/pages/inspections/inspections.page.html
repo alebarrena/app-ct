@@ -1,0 +1,69 @@
+<app-page-layout [title]='"Inspecciones" | translation:"ho_inspecciones"' >
+  <div class="inspection-wrap-container">
+    <div class="search-input">
+      <ion-input
+      type="text"
+      [placeholder]="'Buscar' | translation:'mi_buscar' "
+      fill="solid"
+      (input)="onSubmit($event)"
+    >
+      <ion-icon
+        slot="start"
+        name="search-outline"
+        aria-hidden="true"
+        class="text-md"
+      ></ion-icon>
+    </ion-input>
+    </div>
+    <div class="mx-1">
+      <div class="d-flex justify-content-between title-inspections mt-2 mb-1">
+        <h2 class="w-100">{{"Mis inspecciones"|translation:"mi_misinspecciones"}}</h2>
+        
+        <ion-spinner *ngIf="loading" name="circular"></ion-spinner>
+        <ion-button *ngIf="!loading" (click)="refresh()">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+    <div class="mx-1">
+      <div class="type-buttons-wrapper">
+        <ion-button expand="block" [class]="{'tab-active':type_filter == 'asignadas'}" (click)="selectType('asignadas')">{{"Asignadas"| translation: "mi_asignadas"}}</ion-button>
+        <ion-button expand="block" [class]="{'tab-active':type_filter == 'sin-numero'}" (click)="selectType('sin-numero')">{{"Sin Número" | translation:"mi_sinnumero"}}</ion-button>
+      </div>
+    </div>
+    <div class="pt-2 pb-2 mt-2 mb-2">
+      <div class="tags-buttons-wrapper">
+        <ion-button shape="round" [class.active]="status_filter == 'pendientes' " (click)="toggleFilter('pendientes')">{{"Pendientes" | translation: "mi_pendientes"}}</ion-button>
+        <ion-button shape="round" [class.active]="status_filter == 'finalizadas' "  (click)="toggleFilter('finalizadas')">{{"Finalizadas" | translation: "mi_finalizadas"}}</ion-button>
+        <ion-button shape="round" [class.active]="status_filter == 'por-enviar' "  (click)="toggleFilter('por-enviar')">{{"Por enviar" | translation: "mi_porenviar"}}</ion-button>
+      </div>
+    </div>
+    <div>
+      <ion-list lines="none" class="inspection-list" >
+        <ion-item *ngFor="let i of filteredList" >
+          <ion-button class="button-inspection" expand="block" [routerLink]="'/inspection/'+i.cod_inspeccion">
+
+            <ion-icon class="mr-1" class="secondaryColor" name="document-outline"></ion-icon>
+            <ion-label>
+              <div>{{ i.cod_inspeccion }}</div>
+              <div class="text-sm" *ngIf="i.sync == 0">{{'No ha sido enviado' | translation:"mi_no_enviado"}}</div>
+              <div class="text-sm" *ngIf="i.completed == 1 && i.sync == 2">{{ formatDate(i.updated_at)}}</div>
+            </ion-label>
+            <ion-icon class="trash" name="trash-outline" *ngIf="false"></ion-icon>
+            <ion-icon class="pending" name="remove-circle-outline" *ngIf="i.completed == 0 && i.sync == 0"></ion-icon>
+            <ion-icon class="check" name="checkmark-circle" *ngIf="i.completed == 1 && i.sync == 2"></ion-icon>
+            <ion-icon class="pending" name="time-outline" *ngIf="i.sync == -1"></ion-icon>
+
+          </ion-button>
+          <ion-button class="download-inspection-button" (click)="download(i)" *ngIf="i.completed == 1 && i.sync == 2 && i.status != 'CANCELLED'" style="width:40px"><ion-icon class="check" name="download-outline" ></ion-icon></ion-button>
+        </ion-item>
+      </ion-list>
+    </div> 
+  </div>
+</app-page-layout>
+
+<ion-fab class="button-fab-fixed"  *ngIf="type_filter=='sin-numero'">
+  <ion-fab-button (click)="create()"  class="primary-icon">
+    <ion-icon name="add" ></ion-icon>
+  </ion-fab-button>
+</ion-fab>

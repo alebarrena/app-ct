@@ -1,0 +1,64 @@
+<div>
+  <h5 class="alignLeft">
+    <strong>{{
+      "Selecciona la causa del siniestro" | translation : "ra_causa"
+    }}</strong>
+  </h5>
+  <ion-select
+    [label]="'Causa de siniestro' | translation : 'ra_causa_label'"
+    [formControl]="formGroup.controls.causa"
+  >
+    <ion-select-option
+      value="opcion"
+      [value]="option.id_causa"
+      *ngFor="let option of options"
+      >{{ option.causa }}</ion-select-option
+    >
+  </ion-select>
+  <h5 class="alignLeft">
+    <ion-icon icon="reader-outline" />
+    {{ "Escrito" | translation : "ra_escrito" }}
+  </h5>
+  <ion-textarea
+    class="relato"
+    wrap="soft"
+    fill="outline"
+    [placeholder]="
+      'Escribir relato del siniestro' | translation : 'ra_escribe'
+    "
+    [formControl]="formGroup.controls.Contratante_Hechos"
+  ></ion-textarea>
+  <div *ngIf="false">
+    <h5 class="alignLeft">
+      <ion-icon icon="mic-circle-outline" />
+      {{ "Audio" | translation : "ra_audio" }}
+    </h5>
+    <ion-button class="mic-button" fill="transparent" (click)="record()">
+      <ion-icon name="mic-circle-outline" />
+    </ion-button>
+    <div class="progress-audio">
+      <ion-progress-bar
+        *ngIf="recording"
+        type="indeterminate"
+      ></ion-progress-bar>
+      <ion-progress-bar
+        *ngIf="playing"
+        [value]="audioRunning"
+      ></ion-progress-bar>
+    </div>
+    <div class="record-playlist">
+      <div class="record-player" *ngFor="let audio of playlist; let i = index">
+        <div class="record-buttons">
+          <button fill="transparent" slot="start" (click)="play(i)">
+            <ion-icon *ngIf="!audio.play" name="play-sharp" />
+            <ion-icon *ngIf="audio.play" name="pause-outline" />
+          </button>
+          <button fill="transparent" (click)="trash(i)">
+            <ion-icon name="trash-sharp" />
+          </button>
+        </div>
+        <div>{{ audio.filename }}</div>
+      </div>
+    </div>
+  </div>
+</div>

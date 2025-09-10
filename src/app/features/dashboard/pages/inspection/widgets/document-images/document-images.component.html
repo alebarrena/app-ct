@@ -1,0 +1,24 @@
+<div>
+
+    <h5 class="title-section">{{ 'Fachada' }}</h5>
+    <div class="images-section">
+  <div *ngFor="let group of imagesFachadaGroups">
+      <ion-button *ngFor="let image of fachadaGroups[group]" class="image-selector" [class.active]="image.selected == 1" (click)="selectImage(image)">
+        <ion-thumbnail slot="start">
+          <img [alt]="image.filename" [src]="image.thumbnail_media" />
+        </ion-thumbnail>
+      </ion-button>
+    </div>
+  </div>
+
+  <div *ngFor="let group of imagesGroups">
+    <h5 class="title-section">{{ getTitle(group) }}</h5>
+    <div class="images-section">
+      <ion-button *ngFor="let image of groups[group]" class="image-selector" [class.active]="image.selected == 1" (click)="selectImage(image)">
+        <ion-thumbnail slot="start">
+          <img [alt]="image.filename" [src]="image.thumbnail_media" />
+        </ion-thumbnail>
+      </ion-button>
+    </div>
+  </div>
+</div>

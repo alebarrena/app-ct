@@ -1,0 +1,6 @@
+<h1 class="title-delete-dialog">{{ data.title | translation:data.tag}}</h1>
+<p class="text-dark text-center p-0 m-0">{{ 'Deseas eliminar el material?' | translation:"dd_tab"}}</p>
+<div class="d-flex">
+  <ion-button class="btn btn-text" (click)="cancel()">CANCELAR</ion-button>
+  <ion-button class="btn btn-danger" (click)="deleteItem()">ELIMINAR</ion-button>
+</div>

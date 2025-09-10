@@ -1,0 +1,21 @@
+<!--<ion-menu contentId="main-content">
+  <ion-content class="ion-padding">This is the menu content.</ion-content>
+</ion-menu>-->
+<div class="ion-page" id="main-content">
+  <ion-tabs>
+    <ion-tab-bar slot="bottom" class="main-tabs">
+      <ion-tab-button tab="dashboard" (click)="openDashboard()">
+        <ion-icon [name]="(isActive('dashboard'))?'home-sharp':'home-outline'"></ion-icon>
+        <ion-label>{{"Inicio" | translation:"ho_inicio" }}</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="inspections" (click)="openInspections()">
+        <ion-icon [name]="(isActive('inspections'))?'newspaper-sharp':'newspaper-outline'"></ion-icon>
+        <ion-label>{{"Mis Inspecciones" | translation:"mi_misinspecciones" }}</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="profile" (click)="openProfile()">
+        <ion-icon [name]="(isActive('profile'))?'person-sharp':'person-outline'"></ion-icon>
+        <ion-label>{{"Perfil" | translation:"ho_perfil" }}</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</div>

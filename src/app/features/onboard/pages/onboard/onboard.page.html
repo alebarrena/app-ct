@@ -1,0 +1,58 @@
+<ion-content [fullscreen]="true">
+  <div class="cc">
+    <div class="cd">
+      <div class="content-wrapper" [class]="'onboard-'+page">
+        <div class="slider-wrapper">
+          <swiper-container #swiperRef class="mySwiper" [config]="config" init="false">
+            <swiper-slide>
+              <div>
+                <h1>{{ "Bienvenido--" | translation:"on_titulo1" }}</h1>
+                <p class="text-center">
+                  {{"Al sistema de inspecciones, una solución diseñada para facilitar y optimizar la evaluación de daños en infraestructuras como viviendas, departamentos y oficinas." | translation:"on_descripcion1"}}
+                </p>
+              </div>
+            </swiper-slide>
+            <swiper-slide>
+              <div>
+                <h1>{{"Documenta y Gestiona--" | translation:"on_titulo2" }}</h1>
+                <p class="text-center">
+                  {{"Nuestro sistema te permite documentar y gestionar de manera eficiente cada inspección, desde la identificación de daños hasta la generación de informes detallados." | translation:"on_descripcion2" }}
+                </p>
+              </div></swiper-slide
+            >
+            <swiper-slide>
+              <div>
+                <h1>{{"¡Estamos listos!--" | translation:"on_titulo3" }}</h1>
+                <p>
+                  {{"¡Comienza hoy mismo y descubre cómo podemos ayudarte a simplificar tu trabajo!" | translation:"on_descripcion3"}}
+                </p>
+              </div></swiper-slide
+            >
+          </swiper-container>
+          <div class="onboard-buttons-wrapper">
+            <ion-button
+              shape="round"
+              *ngIf="page < 3"
+              class="next-button"
+              (click)="next()"
+            >
+              <span>{{"Siguiente" | translation:"on_siguiente"}}</span>
+            </ion-button>
+            <ion-button
+              shape="round"  
+              *ngIf="page >= 3"
+              class="init-button"
+              (click)="next()"
+            >
+              <span>{{"Comenzar" | translation:"on_comenzar"}}</span>
+            </ion-button>
+          </div>
+          <div class="d-flex justify-content-center mt-2" *ngIf="page<3">
+            <ion-button class="skip-button" fill="clear" (click)="skip()">{{"Saltar" | translation:"on_saltar"}}</ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

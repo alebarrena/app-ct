@@ -1,0 +1,4 @@
+<div *ngIf="image!=null" class="viewer">
+  <ion-img [src]="'data:'+image.mime_type+';base64,'+image!.base64"/>
+</div>
+<ion-button class="viewer-close" color="transparent" (click)="close()"><ion-icon icon="close-outline" color="white"/></ion-button>

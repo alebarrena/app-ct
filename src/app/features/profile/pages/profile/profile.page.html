@@ -1,0 +1,24 @@
+<app-page-layout title="Perfil" >
+  <div class="vertical-between">
+    <div>
+      <h1 class="profile-title">{{profile.nomInspector}}</h1>
+      <div class="profile-subtitle">{{'Perfil: Inspector / Liquidador' | translation:"pp_perfil" }}</div>
+      <ion-card class="card-profile">
+        <div class="perfil-section">
+          <h4>{{'Detalles del perfil' | translation:"pp_detalles"}}</h4>
+          <div class="perfil-row d-flex align-items-center"><ion-icon name="person-outline"  /> {{profile.nomInspector}} </div>
+          <div class="perfil-row d-flex align-items-center"><ion-icon name="mail-outline"  /> {{profile.emailInspector }}</div>
+          <div class="perfil-row d-flex align-items-center"><ion-icon name="phone-portrait-outline"  /> {{profile.telInspector }}</div>
+        </div>
+        <div class="perfil-section">
+          <h4>{{'Idioma' | translation:"p_idioma" }}</h4>
+          <div class="perfil-row d-flex align-items-center"><ion-icon name="flag-outline"  /> {{lang}}</div>
+        </div>
+      </ion-card>
+    </div>
+    <div class="logout-wrapper">
+      <ion-button fill="transparent" color="primary" (click)="logout()"><ion-icon name="log-out-outline"  /> Cerrar sesion </ion-button>
+    </div>
+  </div>
+</app-page-layout>
+

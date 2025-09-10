@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf")
+  format("truetype-variations");
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../assets/fonts/Poppins/Poppins-Medium.ttf")
+  format("truetype-variations");
+}
+
+* {
+  font-family: Inter;
+}
+h1,h2,h3,h4,h5{
+    font-family: Poppins;
+}
+
+
+.text-sm{
+  font-size:12px;
+}
+.text-md{
+  font-size:14px;
+}
+.text-lg{
+  font-size:18px;
+}

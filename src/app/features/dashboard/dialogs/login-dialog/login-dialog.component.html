@@ -1,0 +1,73 @@
+<form (submit)="onSubmit($event)" [formGroup]="formAuth">
+  <div class="alert-danger text-dark p-3 m-3">
+    {{'Tu token ha expirado, por favor inicia sesion de nuevo' | translation:"error_login"}}
+  </div>
+  
+  <ion-list lines="none" class="login-form">
+    <ion-item>
+      <ion-input
+        type="text"
+        fill="solid"
+        formControlName="username"
+        [errorText]="'Error' | translation:'err_email'"
+      >
+        <ion-icon
+          slot="start"
+          name="person-circle-outline"
+          aria-hidden="true"
+          class="icon-24"
+        ></ion-icon>
+        <ion-label position="floating"
+          >{{ 'Usuario' | translation:"lo_usuario" }}</ion-label
+        >
+      </ion-input>
+      <div class="error-message" *ngIf="error">
+        {{ 'Error' | translation:"err_email" }}
+      </div>
+    </ion-item>
+    <ion-item class="mt-1 pt-1">
+      <ion-input
+        fill="solid"
+        [type]="password_hidden?'password':'text'"
+        formControlName="password"
+      >
+        <ion-icon
+          slot="start"
+          name="lock-closed"
+          aria-hidden="true"
+          class="icon-24"
+        ></ion-icon>
+        <ion-label position="floating"
+          >{{ 'Contraseña' | translation:"lo_contraseña" }}</ion-label
+        >
+        <ion-button
+          fill="clear"
+          color="secondary"
+          slot="end"
+          class="icon-24"
+          aria-label="Show/hide"
+          (click)="password_hidden=!password_hidden"
+        >
+          <ion-icon
+            slot="icon-only"
+            [name]="!password_hidden?'eye':'eye-off'"
+            aria-hidden="true"
+            class="icon-24"
+          ></ion-icon>
+        </ion-button>
+      </ion-input>
+      <div class="error-message" *ngIf="error">
+        {{ 'Error' | translation:'err_email' }}
+      </div>
+    </ion-item>
+  </ion-list>
+  <div class="button-wrapper">
+    <ion-button
+      expand="block"
+      [disabled]="formAuth.invalid || loading"
+      class="login-button"
+      type="submit"
+      ><span *ngIf="!loading">{{ 'Iniciar sesion' | translation:"lo_iniciar"}}</span> <ion-spinner *ngIf="loading" name="dots"></ion-spinner></ion-button
+    >
+  </div>
+</form>

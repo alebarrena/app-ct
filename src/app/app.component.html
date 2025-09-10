@@ -1,0 +1,7 @@
+<ion-app>
+  <app-layout (onInit)="init()">
+    <div [@fade]="initialized ? 'visible' : 'hidden'">
+      <ion-router-outlet *ngIf="initialized"></ion-router-outlet>
+    </div>
+  </app-layout>
+</ion-app>

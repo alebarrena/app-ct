@@ -1,0 +1,127 @@
+PODS:
+  - Capacitor (6.1.1):
+    - CapacitorCordova
+  - CapacitorApp (6.0.0):
+    - Capacitor
+  - CapacitorBlobWriter (0.0.1):
+    - Capacitor
+    - GCDWebServer (~> 3.0)
+  - CapacitorCamera (6.0.2):
+    - Capacitor
+  - CapacitorCommunityFileOpener (6.0.1):
+    - Capacitor
+  - CapacitorCommunitySqlite (6.0.1):
+    - Capacitor
+    - SQLCipher
+    - ZIPFoundation
+  - CapacitorCordova (6.1.1)
+  - CapacitorDialog (6.0.1):
+    - Capacitor
+  - CapacitorFilesystem (6.0.1):
+    - Capacitor
+  - CapacitorGeolocation (6.0.1):
+    - Capacitor
+  - CapacitorHaptics (6.0.0):
+    - Capacitor
+  - CapacitorKeyboard (6.0.1):
+    - Capacitor
+  - CapacitorLocalNotifications (6.1.0):
+    - Capacitor
+  - CapacitorPreferences (6.0.1):
+    - Capacitor
+  - CapacitorStatusBar (6.0.0):
+    - Capacitor
+  - CapacitorVoiceRecorder (6.0.3):
+    - Capacitor
+  - GCDWebServer (3.5.4):
+    - GCDWebServer/Core (= 3.5.4)
+  - GCDWebServer/Core (3.5.4)
+  - SQLCipher (4.5.6):
+    - SQLCipher/standard (= 4.5.6)
+  - SQLCipher/common (4.5.6)
+  - SQLCipher/standard (4.5.6):
+    - SQLCipher/common
+  - ZIPFoundation (0.9.16)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - CapacitorBlobWriter (from `../../node_modules/capacitor-blob-writer`)
+  - "CapacitorCamera (from `../../node_modules/@capacitor/camera`)"
+  - "CapacitorCommunityFileOpener (from `../../node_modules/@capacitor-community/file-opener`)"
+  - "CapacitorCommunitySqlite (from `../../node_modules/@capacitor-community/sqlite`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorDialog (from `../../node_modules/@capacitor/dialog`)"
+  - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
+  - "CapacitorGeolocation (from `../../node_modules/@capacitor/geolocation`)"
+  - "CapacitorHaptics (from `../../node_modules/@capacitor/haptics`)"
+  - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
+  - "CapacitorLocalNotifications (from `../../node_modules/@capacitor/local-notifications`)"
+  - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
+  - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - CapacitorVoiceRecorder (from `../../node_modules/capacitor-voice-recorder`)
+
+SPEC REPOS:
+  trunk:
+    - GCDWebServer
+    - SQLCipher
+    - ZIPFoundation
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorApp:
+    :path: "../../node_modules/@capacitor/app"
+  CapacitorBlobWriter:
+    :path: "../../node_modules/capacitor-blob-writer"
+  CapacitorCamera:
+    :path: "../../node_modules/@capacitor/camera"
+  CapacitorCommunityFileOpener:
+    :path: "../../node_modules/@capacitor-community/file-opener"
+  CapacitorCommunitySqlite:
+    :path: "../../node_modules/@capacitor-community/sqlite"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorDialog:
+    :path: "../../node_modules/@capacitor/dialog"
+  CapacitorFilesystem:
+    :path: "../../node_modules/@capacitor/filesystem"
+  CapacitorGeolocation:
+    :path: "../../node_modules/@capacitor/geolocation"
+  CapacitorHaptics:
+    :path: "../../node_modules/@capacitor/haptics"
+  CapacitorKeyboard:
+    :path: "../../node_modules/@capacitor/keyboard"
+  CapacitorLocalNotifications:
+    :path: "../../node_modules/@capacitor/local-notifications"
+  CapacitorPreferences:
+    :path: "../../node_modules/@capacitor/preferences"
+  CapacitorStatusBar:
+    :path: "../../node_modules/@capacitor/status-bar"
+  CapacitorVoiceRecorder:
+    :path: "../../node_modules/capacitor-voice-recorder"
+
+SPEC CHECKSUMS:
+  Capacitor: 7b38922425a542e0b5936c8f72ea89d876dd4df1
+  CapacitorApp: 30145f2ea2311e4f3744472119ec87d2ddf4c0a7
+  CapacitorBlobWriter: d709e5d22ab9989afd730eb4773873d1ded5fd08
+  CapacitorCamera: 65a0d1235114a6a5042e664d6da8d213927f7aa0
+  CapacitorCommunityFileOpener: 6373ac7cf5b48ef7086927608aaba524f1e676e4
+  CapacitorCommunitySqlite: 5fa19977b8e399b2e318ce748f7dc77a8e5b5496
+  CapacitorCordova: 8f2cc8d8d3619c566e9418fe8772064a94266106
+  CapacitorDialog: 4ad1e7b658395ab6696e6a84eec5852324b61fce
+  CapacitorFilesystem: 30941c0fea0773fcaedab18e262b339f5b9c06bc
+  CapacitorGeolocation: 2621f3cbd11be93377d633c8eac7b99bfbf060b6
+  CapacitorHaptics: 0cea833e6a8bf489dd6acaaebf6d953b90086c59
+  CapacitorKeyboard: f38d730356be5569d72eb87ad9c8166947728c36
+  CapacitorLocalNotifications: 6003db784d552d39055b4401c138e2971c2d831b
+  CapacitorPreferences: 97d529423bb7c1196455e9a1b6dd1074625c78bd
+  CapacitorStatusBar: 129c68650d3f950e080e8e7e03d69c3b361dbe52
+  CapacitorVoiceRecorder: 27c4c998c2280571d853579f319f6f53f884bdee
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
+  SQLCipher: 838309284f29953a28ad2e81d87d55ea6b7c74fd
+  ZIPFoundation: d170fa8e270b2a32bef9dcdcabff5b8f1a5deced
+
+PODFILE CHECKSUM: 341cfde455650c0fe336d90d8c05d51aa6c7c979
+
+COCOAPODS: 1.16.2

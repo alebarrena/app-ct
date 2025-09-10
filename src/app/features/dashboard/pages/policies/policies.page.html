@@ -1,0 +1,49 @@
+<app-page-layout [title]='"Polizas" | translation:"ho_polizas"' >
+  <div class="inspection-wrap-container">
+    <div class="search-input">
+      <ion-input
+      type="text"
+      [placeholder]="'Buscar' | translation:'mi_buscar' "
+      fill="solid"
+      (input)="onSubmit($event)"
+    >
+      <ion-icon
+        slot="start"
+        name="search-outline"
+        aria-hidden="true"
+        class="text-md"
+      ></ion-icon>
+    </ion-input>
+    </div>
+    <div class="mx-1">
+      <div class="d-flex justify-content-between title-inspections mt-2 mb-1">
+        <h2 class="w-100">{{"Polizas"|translation:"mi_polizas"}}</h2>
+      </div>
+    </div>
+    <div class="mx-1">
+      <div class="type-buttons-wrapper">
+        <ion-button expand="block" [class]="{'tab-active':type_filter == 'policies'}" (click)="selectType('policies')">{{"Lista de polizas"| translation: "mi_polizas"}}</ion-button>
+        <ion-button expand="block" [class]="{'tab-active':type_filter == 'cad'}" (click)="selectType('cads')">{{"Listas CAD" | translation:"mi_cad"}}</ion-button>
+      </div>
+    </div>
+    <div>
+      <ion-list lines="none" class="inspection-list" >
+        <ion-item *ngFor="let poliza of filteredList" >
+          <ion-icon class="mr-1" class="secondaryColor" name="document-outline"></ion-icon>
+          <ion-label>
+            <div class="d-flex justify-content-between"><div class="w-100"><h5>{{ "POL10008" }}</h5></div> 
+            <ion-button class="p-0 m-0 text-primary" color="transparent" (click)="openPdf(poliza)"><ion-icon icon="link-outline" />Ver mas</ion-button></div>
+            <h6>{{ poliza.cobertura }}</h6>
+            <div class="d-flex justify-content-between polizas-text">
+              <div>
+                Monto asegurado: {{ poliza.monto_asegurado }}
+              </div>
+              <div>Monto deducible: {{ poliza.monto_asegurado }}</div>
+            </div>
+            
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div> 
+  </div>
+</app-page-layout>

@@ -1,0 +1,46 @@
+<div>
+  <h5 class="alignLeft"><strong>{{"Resumen de inspeccion" | translation: "fi_resumen"}}</strong></h5>
+
+  <div class="mb-2 pb-2">
+    <ion-grid [fixed]="true">
+      <ion-row>
+        <ion-col size="6">
+          <h5>Firma Inspector</h5>
+          <div class="sign-container">
+            <div *ngIf="sign1==null"> --  Vacio -- </div>
+            <img *ngIf="sign1!=null" [src]="sign1"/>
+          </div>
+          <ion-button id="open-modal1" color="primary" fill="clear"  expand="block" *ngIf="!completed">Firmar</ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <h5>Firma Entrevistado</h5>
+          <div class="sign-container">
+            <div *ngIf="sign2==null"> --  Vacio -- </div>
+            <img *ngIf="sign2!=null" [src]="sign2"/>
+          </div>
+          <ion-button id="open-modal2" color="primary" fill="clear" expand="block" *ngIf="!completed">Firmar</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  <ion-modal #modal1 trigger="open-modal1" >
+    <ng-template>
+      <ion-content>
+       <app-signatures-dialog [modal]="modal1" (onSign)="signed1($event)"/>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <ion-modal #modal2 trigger="open-modal2" >
+    <ng-template>
+      <ion-content>
+       <app-signatures-dialog [modal]="modal2" (onSign)="signed2($event)"/>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <div class="bottom-space">
+    <div class="mx-1">
+      <ion-button (click)="upload()" *ngIf="!synced" [disabled]="this.sign1==null || this.sign2==null || this.sending" shape="round" class="inspection-upload-button"><ion-icon icon="cloud-upload-outline"/> {{'Enviar Inspeccion' | translation:'fi_enviar'}}</ion-button>
+      <ion-button (click)="download()" [disabled]="this.sign1==null || this.sign2==null || formGroup.invalid" shape="round"  fill="outline" class="inspection-download-button"><ion-icon icon="download-outline"/>{{'Descargar Inspeccion' | translation:"fi_descargar"}}</ion-button>  
+    </div>  
+  </div>
+</div>
