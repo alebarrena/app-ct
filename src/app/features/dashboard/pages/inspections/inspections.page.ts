@@ -199,7 +199,7 @@ export class InspectionsPage implements OnInit, ViewWillEnter {
           );
         } else {
           var dk = await this.storage.select(
-            `UPDATE inspecciones_cabecera SET status = 'CANCELLED' WHERE inspection_id = ${remove_inspections[i].cod_inspeccion}`
+            `UPDATE inspecciones_cabecera SET status = 'INVALID' WHERE inspection_id = ${remove_inspections[i].cod_inspeccion}`
           );
         }
       }
@@ -247,8 +247,10 @@ export class InspectionsPage implements OnInit, ViewWillEnter {
       for (var i = 0; i < inspecciones_pendientes.length; i++) {
         var inspeccion = inspecciones_pendientes[i];
         console.log('Enviando inspección:', inspeccion.cod_inspeccion);
-        var ds = await this.dashboardService.send(inspeccion.cod_inspeccion);
-        flag = true;
+        if(inspeccion.status != 'INVALID'){
+          var ds = await this.dashboardService.send(inspeccion.cod_inspeccion);
+          flag = true;
+        }
       }
       if (flag) {
         setTimeout(async () => {
