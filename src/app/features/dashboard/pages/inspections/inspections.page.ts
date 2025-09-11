@@ -45,6 +45,7 @@ import {
 } from '@capacitor-community/file-opener';
 import { Pdf } from 'src/app/helpers/pdf/pdf';
 import { IonSpinner } from '@ionic/angular/standalone';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-inspections',
@@ -77,6 +78,22 @@ import { IonSpinner } from '@ionic/angular/standalone';
   ],
 })
 export class InspectionsPage implements OnInit, ViewWillEnter {
+  async pingServer(timeout = 5000): Promise<boolean> {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      await fetch(environment.api + '/health/status', {
+        method: 'GET',
+        signal,
+      });
+      clearTimeout(timer);
+      return true;
+    } catch (e) {
+      clearTimeout(timer);
+      return false;
+    }
+  }
   formSearch = new FormGroup({
     term: new FormControl('', []),
   });
@@ -104,7 +121,15 @@ export class InspectionsPage implements OnInit, ViewWillEnter {
     this.usuario = localStorage.getItem('username');
     if (window.location.hash == '#pending') this.status_filter = 'pendientes';
     if (window.location.hash == '#finished') this.status_filter = 'finalizadas';
-    this.refresh();
+    const hasInternet = await this.pingServer();
+
+    var d = await this.storage.select('SELECT * FROM inspecciones');
+    this.list = d;
+    this.filteredList = this.list;
+    console.log('Conexión a internet:', hasInternet);
+    if (hasInternet) {
+      this.refresh();
+    }
   }
   onSubmit(event: any) {
     this.filteredList = this.list.filter((item) => {
@@ -125,103 +150,120 @@ export class InspectionsPage implements OnInit, ViewWillEnter {
       .padStart(2, '0')}/${date.getFullYear()}`;
   }
   async refresh() {
-    console.log('Iniciando refresh...');
-    this.loading = true;
+    try {
+      console.log('Iniciando refresh...');
+      this.loading = true;
 
-    // Buscar las inspecciones completadas
-    console.log('Consultando inspecciones locales...');
-    var d = await this.storage.select('SELECT * FROM inspecciones');
-    this.list = d;
-    console.log('Inspecciones locales:', this.list);
+      // Buscar las inspecciones completadas
+      console.log('Consultando inspecciones locales...');
+      var d = await this.storage.select('SELECT * FROM inspecciones');
+      this.list = d;
+      console.log(this.list);
+      console.log('Inspecciones locales:', this.list);
 
-    console.log('Consultando inspecciones del servidor...');
-    var result: any = await new Promise((resolve, reject) => {
-      this.dashboardService.inspectionList().subscribe({
-        next: (data) => resolve(data),
-        error: (error) => reject(error),
+      console.log('Consultando inspecciones del servidor...');
+      var result: any = await new Promise((resolve, reject) => {
+        console.log('Llamando a dashboardService.inspectionList()');
+        this.dashboardService.inspectionList().subscribe({
+          next: (data) => resolve(data),
+          error: (error) => resolve([]),
+        });
       });
-    });
-    var data = result.data.list;
-    console.log('Inspecciones servidor:', data);
+      var data = result.data.list;
+      console.log('Inspecciones servidor:', data);
 
-    var remove_inspections = this.list.filter(
-      (item) =>
-        data.filter((it: any) => it.cod_inspeccion == item.cod_inspeccion)
-          .length == 0
-    );
-    var add_inspections = data.filter(
-      (item: any) =>
-        this.list.filter((it: any) => it.cod_inspeccion == item.cod_inspeccion)
-          .length == 0
-    );
+      var remove_inspections = this.list.filter(
+        (item) =>
+          data.filter((it: any) => it.cod_inspeccion == item.cod_inspeccion)
+            .length == 0
+      );
+      var add_inspections = data.filter(
+        (item: any) =>
+          this.list.filter(
+            (it: any) => it.cod_inspeccion == item.cod_inspeccion
+          ).length == 0
+      );
 
-    console.log('Inspecciones a eliminar:', remove_inspections);
-    console.log('Inspecciones a agregar:', add_inspections);
+      console.log('Inspecciones a eliminar:', remove_inspections);
+      console.log('Inspecciones a agregar:', add_inspections);
 
-    for (var i = 0; i < remove_inspections.length; i++) {
-      console.log('Eliminando inspección:', remove_inspections[i]);
-      /*var ad = await this.storage.run(
-        `DELETE FROM inspecciones WHERE cod_inspeccion = '${remove_inspections[i].cod_inspeccion}'`
-      );*/
-    }
-
-    for (var i = 0; i < add_inspections.length; i++) {
-      var item = add_inspections[i];
-      console.log('Agregando inspección:', item);
-      try {
-        var d1 = await this.storage.insert('inspecciones', item);
-        console.log('Inspección guardada:', item.cod_inspeccion);
-      } catch (e) {
-        console.log('Error al guardar inspección:', e);
+      for (var i = 0; i < remove_inspections.length; i++) {
+        console.log('Eliminando inspección:', remove_inspections[i]);
+        console.log('Consultando inspecciones cabecera...');
+        var d = await this.storage.select(
+          `SELECT cod_inspeccion FROM inspecciones_cabecera WHERE inspection_id = ${remove_inspections[i].cod_inspeccion}`
+        );
+        if (d.length == 0) {
+          var ad = await this.storage.run(
+            `DELETE FROM inspecciones WHERE cod_inspeccion = '${remove_inspections[i].cod_inspeccion}'`
+          );
+        } else {
+          var dk = await this.storage.select(
+            `UPDATE inspecciones_cabecera SET status = 'CANCELLED' WHERE inspection_id = ${remove_inspections[i].cod_inspeccion}`
+          );
+        }
       }
-    }
 
-    console.log('Actualizando lista local...');
-    var d = await this.storage.select('SELECT * FROM inspecciones');
-    this.list = d;
-    this.filteredList = this.list;
-    console.log('Lista actualizada:', this.list);
+      for (var i = 0; i < add_inspections.length; i++) {
+        var item = add_inspections[i];
+        console.log('Agregando inspección:', item);
+        try {
+          var d1 = await this.storage.insert('inspecciones', item);
+          console.log('Inspección guardada:', item.cod_inspeccion);
+        } catch (e) {
+          console.log('Error al guardar inspección:', e);
+        }
+      }
 
-    if (this.status_filter == 'pendientes') {
-      this.filteredList = this.list.filter((item) => item.completed == 0);
-      console.log('Filtrando pendientes:', this.filteredList);
-    }
-    if (this.status_filter == 'finalizadas') {
-      this.filteredList = this.list.filter((item) => item.completed == 1);
-      console.log('Filtrando finalizadas:', this.filteredList);
-    }
-    if (this.status_filter == 'por-enviar') {
-      this.filteredList = this.list.filter((item) => item.sync == 0);
-      console.log('Filtrando por enviar:', this.filteredList);
-    }
+      console.log('Actualizando lista local...');
+      var d = await this.storage.select('SELECT * FROM inspecciones');
+      this.list = d;
+      this.filteredList = this.list;
+      console.log('Lista actualizada:', this.list);
 
-    var inspecciones_pendientes = this.list.filter(
-      (item) => item.completed == 1 && item.sync != 2
-    );
-    console.log('Inspecciones pendientes por sincronizar:', inspecciones_pendientes);
+      if (this.status_filter == 'pendientes') {
+        this.filteredList = this.list.filter((item) => item.completed == 0);
+        console.log('Filtrando pendientes:', this.filteredList);
+      }
+      if (this.status_filter == 'finalizadas') {
+        this.filteredList = this.list.filter((item) => item.completed == 1);
+        console.log('Filtrando finalizadas:', this.filteredList);
+      }
+      if (this.status_filter == 'por-enviar') {
+        this.filteredList = this.list.filter((item) => item.sync == 0);
+        console.log('Filtrando por enviar:', this.filteredList);
+      }
 
-    /// Enviar inspecciones completadas no sincronizadas
-    var flag = false;
-    for (var i = 0; i < inspecciones_pendientes.length; i++) {
-      var inspeccion = inspecciones_pendientes[i];
-      console.log('Enviando inspección:', inspeccion.cod_inspeccion);
-      var ds = await this.dashboardService.send(inspeccion.cod_inspeccion);
-      flag = true;
-    }
-    if (flag) {
-      setTimeout(async () => {
-        console.log('Actualizando lista tras sincronización...');
-        if (window.location.hash == '#pending')
-          this.status_filter = 'pendientes';
-        if (window.location.hash == '#finished')
-          this.status_filter = 'finalizadas';
-        var d = await this.storage.select('SELECT * FROM inspecciones');
-        this.list = d;
-        this.filteredList = this.list;
-        console.log('Lista tras sincronización:', this.list);
-      }, 300);
-    }
+      var inspecciones_pendientes = this.list.filter(
+        (item) => item.completed == 1 && item.sync != 2
+      );
+      console.log(
+        'Inspecciones pendientes por sincronizar:',
+        inspecciones_pendientes
+      );
 
+      /// Enviar inspecciones completadas no sincronizadas
+      var flag = false;
+      for (var i = 0; i < inspecciones_pendientes.length; i++) {
+        var inspeccion = inspecciones_pendientes[i];
+        console.log('Enviando inspección:', inspeccion.cod_inspeccion);
+        var ds = await this.dashboardService.send(inspeccion.cod_inspeccion);
+        flag = true;
+      }
+      if (flag) {
+        setTimeout(async () => {
+          console.log('Actualizando lista tras sincronización...');
+          if (window.location.hash == '#pending')
+            this.status_filter = 'pendientes';
+          if (window.location.hash == '#finished')
+            this.status_filter = 'finalizadas';
+          var d = await this.storage.select('SELECT * FROM inspecciones');
+          this.list = d;
+          this.filteredList = this.list;
+          console.log('Lista tras sincronización:', this.list);
+        }, 300);
+      }
+    } catch (e) {}
     this.loading = false;
     console.log('Refresh finalizado.');
   }
