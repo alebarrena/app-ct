@@ -208,7 +208,7 @@ export class LayoutComponent implements OnInit {
     }
     // Verificar traducciones
     var d = await this.storage.select('SELECT * FROM translates;');
-    console.log('LANG', d);
+    //console.log('LANG', d);
     if (d.length == 0) {
       // Si en lenguaje no esta cargado
       // Obtener las etiquetas

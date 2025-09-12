@@ -210,12 +210,250 @@ export class DashboardService implements OnInit {
       resolve(true);
     });
   }
+  async generateDesistPdf(inspeccion_cod: any) {
+    return new Promise(async (resolve, reject) => {
+      const pdfMake: any = pdfMakeMain;
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
+      var doc = await Pdf.generateCancelled(this.storage, inspeccion_cod);
+      var pdfObj = pdfMake
+        .createPdf(
+          doc,
+          {},
+          {
+            Roboto: {
+              normal: 'Roboto-Regular.ttf',
+              bold: 'Roboto-Medium.ttf',
+              italics: 'Roboto-Italic.ttf',
+              bolditalics: 'Roboto-MediumItalic.ttf',
+            },
+          },
+          pdfFonts.pdfMake.vfs
+        )
+        .getBase64((data: any) => {
+          console.log(data);
+          resolve(data);
+        });
+    });
+  }
+  async desist(cod_inspeccion: string) {
+    var inspeccions = await this.storage.select(
+      `SELECT * FROM inspecciones WHERE cod_inspeccion = '${cod_inspeccion}'`
+    );
+    var inspeccion = inspeccions[0];
+    var d = await this.storage.select(
+      `SELECT * FROM inspecciones_cabecera WHERE cod_inspeccion = '${cod_inspeccion}'`
+    );
+    return new Promise(async (resolve, reject) => {
+      var _date;
+      if (d[0].fecha_inspeccion == null) {
+        _date = new Date(Date.now());
+      } else {
+        _date = new Date(Date.parse(d[0].fecha_inspeccion));
+      }
+      var ds = await this.storage.select(
+        `SELECT * FROM inspecciones WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
+      );
+      console.log('Desistimiento de inspección');
+      // No guardado
+      if (ds[0].sync == -1) {
+        await this.storage.run(
+          `UPDATE inspecciones SET sync = -1 WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
+        );
+        this.syncInspection(inspeccion.cod_inspeccion).subscribe(
+          async (response) => {
+            await this.storage.run(
+              `UPDATE inspecciones SET sync = 1 WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
+            );
+            var pdf = await this.generateDesistPdf(inspeccion.cod_inspeccion);
+            this.sendPDF(inspeccion.cod_inspeccion, pdf).subscribe(
+              async (data) => {
+                //Eliminar inspeccion en la bd local
+                await this.storage.run(
+                  `UPDATE inspecciones SET sync = 2 WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
+                );
+              },
+              (error) => {}
+            );
+          },
+          async (error) => {}
+        );
+      } else {
+        var dka = {
+          cod: inspeccion.cod_inspeccion,
+          data: {
+            inspeccion: inspeccion,
+            inspeccion_cabecera: {
+              ...d[0],
+              admin_mayor_domo: '',
+              antecedentesCotizacionRobados: '',
+              antecedentesDetalleRobados: '',
+              antecedentesPresupuestoConstruccion: '',
+              antecedentesRelacionHechos: '',
+              antecedentesReporteAlarma: '',
+              antecedetesDeclaracionJurada: '',
+              antiguedad: '',
+
+              fecha_inspeccion: `${_date.getFullYear()}-${(_date.getMonth() + 1)
+                .toString()
+                .padStart(2, '0')}-${_date
+                .getDate()
+                .toString()
+                .padStart(2, '0')} ${_date
+                .getHours()
+                .toString()
+                .padStart(2, '0')}:${_date
+                .getMinutes()
+                .toString()
+                .padStart(2, '0')}:${_date
+                .getSeconds()
+                .toString()
+                .padStart(2, '0')}`,
+              sw_terceros: ' ',
+              otroSeguroExiste: '0',
+              otroSeguroCia: '',
+              total_imagenes: '0',
+              total_documentos: '1',
+              numero_parte: d[0].n_parte,
+              bomberos: d[0].cuerpo_bombero,
+              causa: '',
+              tiene_alarma: '',
+              seguridadCamara: '0',
+              tipo_inmueble: d[0].Tipo_Inmueble1,
+              menores: d[0].menores,
+              guardia_seguridad: '0',
+              reja_primer_piso: '',
+              reja_segundo_piso: '',
+              seguridadNombre: d[0].seguridadnombre,
+              seguridadnombre: '()',
+              seguridadvalor: '[]',
+              seguridadAlarmaNombre: '()',
+              seguridadAlarmaValor: '[]',
+              muros_interiores_nomb: '()',
+              muros_interiores_val: '[]',
+              seguridadProteccionesNombre: '()',
+              seguridadProteccionesValor: '[]',
+
+              cubierta_tech_nomb:
+                d[0].cubierta_tech_val != null
+                  ? '(' + JSON.parse(d[0].cubierta_tech_val).join(',') + ')'
+                  : '()',
+              cubierta_tech_val:
+                d[0].cubierta_tech_val != null
+                  ? JSON.stringify(
+                      JSON.parse(d[0].cubierta_tech_val).map((item: any) => 1)
+                    )
+                  : '[]',
+              otras_inst_nomb:
+                d[0].otras_inst_val != null
+                  ? '(' + JSON.parse(d[0].otras_inst_val).join(',') + ')'
+                  : '()',
+              otras_inst_val:
+                d[0].otras_inst_val != null
+                  ? JSON.stringify(
+                      JSON.parse(d[0].otras_inst_val).map((item: any) => 1)
+                    )
+                  : '[]',
+              pav_interiores_nomb:
+                d[0].pav_interiores_val != null
+                  ? '(' + JSON.parse(d[0].pav_interiores_val).join(',') + ')'
+                  : '()',
+              pav_interiores_val:
+                d[0].pav_interiores_val != null
+                  ? JSON.stringify(
+                      JSON.parse(d[0].pav_interiores_val).map((item: any) => 1)
+                    )
+                  : '[]',
+              terminacion_int_nomb:
+                d[0].terminacion_int_val != null
+                  ? '(' + JSON.parse(d[0].terminacion_int_val).join(',') + ')'
+                  : '()',
+              terminacion_int_val:
+                d[0].terminacion_int_val != null
+                  ? JSON.stringify(
+                      JSON.parse(d[0].terminacion_int_val).map((item: any) => 1)
+                    )
+                  : '[]',
+              cielo_interiores_nomb:
+                d[0].cielo_interiores_val != null
+                  ? '(' + JSON.parse(d[0].cielo_interiores_val).join(',') + ')'
+                  : '()',
+              cielo_interiores_val:
+                d[0].cielo_interiores_val != null
+                  ? JSON.stringify(
+                      JSON.parse(d[0].cielo_interiores_val).map(
+                        (item: any) => 1
+                      )
+                    )
+                  : '[]',
+              perimetrales_nomb:
+                d[0].muros_interiores_val != null
+                  ? '(' + JSON.parse(d[0].muros_interiores_val).join(',') + ')'
+                  : '()',
+              perimetrales_val:
+                d[0].muros_interiores_val != null
+                  ? JSON.stringify(
+                      JSON.parse(d[0].muros_interiores_val).map(
+                        (item: any) => 1
+                      )
+                    )
+                  : '[]',
+
+              sol_antecedentes_nomb: '()',
+              sol_antecedentes_val: '[]',
+            },
+            inspeccion_contenidos: [],
+            inspection_media_files: [],
+            inspection_danos: [],
+            inspeccion_danos_materialidad: [],
+            inspeccion_terceros: [],
+            //inspeccion_terceros_sectores:[],
+            inspeccion_habitantes: [],
+            inspeccion_meta: [],
+            created_at: d[0].created_at,
+            updated_at: new Date().toISOString(),
+          },
+        };
+        this.saveInspection(dka).subscribe(
+          async (data) => {
+            if (data.status == 200) {
+              await this.storage.run(
+                `UPDATE inspecciones SET sync = -1 WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
+              );
+              this.syncInspection(inspeccion.cod_inspeccion).subscribe(
+                async (response) => {
+                  if (response.status == 200) {
+                    await this.storage.run(
+                      `UPDATE inspecciones SET sync = 1 WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
+                    );
+                    var pdf = await this.generateDesistPdf(
+                      inspeccion.cod_inspeccion
+                    );
+                    this.sendPDF(inspeccion.cod_inspeccion, pdf).subscribe(
+                      async (data) => {
+                        await this.storage.run(
+                          `UPDATE inspecciones SET sync = 2 WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
+                        );
+                      },
+                      (error) => {}
+                    );
+                  } else {
+                  }
+                },
+                async (error) => {}
+              );
+            } else {
+            }
+          },
+          async (error) => {}
+        );
+      }
+      //this.init();
+    });
+  }
   async send(cod_inspeccion: any) {
     return new Promise(async (resolve, reject) => {
       var current_datetime = new Date();
-      this.storage.run(
-        `UPDATE inspecciones SET completed = 1, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
-      );
+
       var inspeccion = await this.storage.select(
         `SELECT * FROM inspecciones WHERE cod_inspeccion = '${cod_inspeccion!.toString()}';`
       );
@@ -250,6 +488,11 @@ export class DashboardService implements OnInit {
       var inspeccion_gastos = await this.storage.select(
         `SELECT * FROM inspeccion_expenses WHERE inspection_id = '${cod_inspeccion!.toString()}';`
       );
+
+      this.storage.run(
+        `UPDATE inspecciones SET completed = 1, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
+      );
+
       var aseguradora = inspeccion_meta.filter(
         (item) => item.label == 'ASEGURADORA'
       );
@@ -578,201 +821,100 @@ export class DashboardService implements OnInit {
           inspeccion_terceros,
           //inspeccion_terceros_sectores:[],
           inspeccion_habitantes,
-          inspeccion_gastos:inspeccion_gastos,
+          inspeccion_gastos: inspeccion_gastos,
           inspeccion_meta,
           created_at: inspeccion_cabecera[0].created_at,
           updated_at: new Date().toISOString(),
         },
       };
-      if (inspeccion[0].sync == -1) {
-        /*const loading_ = await this.loadingCtrl.create({
-          message:
-            'Enviando inspección. Este proceso puede tardar unos minutos, por favor no cierres la aplicación',
-        });
-        loading_.present();*/
+      // Verificar si la inspección ya fue sincronizada
+      // Si sync == 1 => ya fue sincronizada
+      // Si sync == -1 => está en proceso de sincronización
+      // Si sync == 0 => no ha sido sincronizada
+      // Si sync == 2 => ya fue sincronizada y se envió el PDF
+      console.log('Iniciando proceso de envío');
+      console.log(inspeccion[0].sync);
 
+      if (inspeccion[0].sync == -1) {
         await this.storage.run(
           `UPDATE inspecciones SET sync = -1, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
         );
-        var dap = await new Promise((resolve2, reject2) => {
-          this.syncInspection(inspeccion[0].cod_inspeccion).subscribe(
-            async (response) => {
-              //loading_.dismiss();
-
-              await this.storage.run(
-                `UPDATE inspecciones SET sync = 1, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
-              );
-              //this.synced = true;
-              /*const toast = await this.toastController.create({
-                message: 'Guardado con éxito',
-                position: 'bottom',
-                duration: 1000,
-                cssClass: 'toast-success',
-              });
-              toast.present();*/
-
-              var pdf = await this.generatePdf(inspeccion[0].cod_inspeccion);
-              /*const loading_1 = await this.loadingCtrl.create({
-                message: 'Enviando PDF',
-              });
-              loading_1.present();*/
-              var p = await new Promise((resolve1, reject1) => {
-                this.sendPDF(inspeccion[0].cod_inspeccion, pdf).subscribe(
-                  async (data) => {
-                    //loading_1.dismiss();
-                    //Eliminar inspeccion en la bd local
-
-                    await this.storage.run(
-                      `UPDATE inspecciones SET sync = 2, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
-                    );
-                    /*const toast = await this.toastController.create({
-                      message: 'Archivo PDF enviado',
-                      position: 'bottom',
-                      duration: 1000,
-                      cssClass: 'toast-success',
-                    });
-                    toast.present();*/
-                    //window.location.href = '/inspections';
-                    resolve1(true);
-                  },
-                  (error) => {
-                    reject(false);
-                    //window.location.href = '/inspections';
-                  }
+        this.syncInspection(inspeccion[0].cod_inspeccion).subscribe(
+          async (response) => {
+            await this.storage.run(
+              `UPDATE inspecciones SET sync = 1, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
+            );
+            var pdf = await this.generatePdf(inspeccion[0].cod_inspeccion);
+            this.sendPDF(inspeccion[0].cod_inspeccion, pdf).subscribe(
+              async (data) => {
+                await this.storage.run(
+                  `UPDATE inspecciones SET sync = 2, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
                 );
-              });
-              resolve2(true);
-            },
-            async (error) => {
-              reject(false);
-              /*const toast = await this.toastController.create({
-                message: 'Guardado, pero no es posible enviarlo',
-                position: 'bottom',
-                duration: 1000,
-                cssClass: 'toast-danger',
-              });
-              toast.present();
-              loading_.dismiss();*/
-              //window.location.href = '/inspections';
-            }
-          );
-        });
+                resolve(true);
+              },
+              (error) => {
+                reject(false);
+              }
+            );
+          },
+          async (error) => {
+            reject(false);
+          }
+        );
       } else {
-        /*const loading = await this.loadingCtrl.create({
-          message: 'Enviando Información',
-        });*/
-        //loading.present();
-        var d = await new Promise((resolve1, reject) => {
-          this.saveInspection(data).subscribe(
+        console.log('Enviando de nuevo la inspeccion');
+        this.saveInspection(data).subscribe(
             async (data) => {
-              //loading.dismiss();
               if (data.status == 200) {
-                /*const loading_ = await this.loadingCtrl.create({
-                message:
-                  'Enviando inspección. Este proceso puede tardar unos minutos, por favor no cierres la aplicación',
-              });
-              loading_.present();*/
+                console.log('Inspeccion enviada');
                 await this.storage.run(
                   `UPDATE inspecciones SET sync = -1, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
                 );
-                this.syncInspection(inspeccion[0].cod_inspeccion).subscribe(
-                  async (response) => {
-                    //loading_.dismiss();
-                    if (response.status == 200) {
-                      await this.storage.run(
-                        `UPDATE inspecciones SET sync = 1, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
-                      );
-                      //this.synced = true;
-                      console.log(response);
-                      /*loading_.dismiss();
-                      const toast = await this.toastController.create({
-                        message: 'Guardado con éxito',
-                        position: 'bottom',
-                        duration: 1000,
-                        cssClass: 'toast-success',
-                      });
-                      toast.present();
-  
-                      const loading_pdf = await this.loadingCtrl.create({
-                        message: 'Enviando PDF',
-                      });
-                      loading_pdf.present();*/
+               this.syncInspection(inspeccion[0].cod_inspeccion).subscribe(
+                    async (response) => {
+                      console.log('Inspeccion sincronizada');
+                      if (response.status == 200) {
+                        await this.storage.run(
+                          `UPDATE inspecciones SET sync = 1, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
+                        );
+                        console.log(response);
 
-                      var pdf = await this.generatePdf(
-                        inspeccion[0].cod_inspeccion
-                      );
-                      this.sendPDF(inspeccion[0].cod_inspeccion, pdf).subscribe(
-                        async (data) => {
-                          //loading_pdf.dismiss();
-                          //Eliminar inspeccion en la bd local
+                        var pdf = await this.generatePdf(
+                          inspeccion[0].cod_inspeccion
+                        );
+                        this.sendPDF(
+                          inspeccion[0].cod_inspeccion,
+                          pdf
+                        ).subscribe(
+                          async (data) => {
+                            console.log('PDF enviado');
 
-                          await this.storage.run(
-                            `UPDATE inspecciones SET sync = 2, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
-                          );
-                          /*const toast = await this.toastController.create({
-                              message: 'Archivo PDF enviado',
-                              position: 'bottom',
-                              duration: 1000,
-                              cssClass: 'toast-success',
-                            });
-                            toast.present();*/
-                          //window.location.href = '/inspections';
-                        },
-                        (error) => {
-                          //window.location.href = '/inspections';
-                        }
-                      );
-                    } else {
-                      /*const toast = await this.toastController.create({
-                        message: 'No fue posible enviarlo al EPASS',
-                        position: 'bottom',
-                        duration: 1000,
-                        cssClass: 'toast-danger',
-                      });
-                      toast.present();*/
+                            await this.storage.run(
+                              `UPDATE inspecciones SET sync = 2, updated_at = '${current_datetime.toISOString()}' WHERE cod_inspeccion = '${cod_inspeccion}'`
+                            );
+                            resolve(true);
+                          },
+                          (error) => {
+                            reject(JSON.stringify(error));
+                          }
+                        );
+                      } else {
+                        reject('Error en la sincronización');
+                      }
+                    },
+                    async (error) => {
+                      reject(JSON.stringify(error));
                     }
-                  },
-                  async (error) => {
-                    /*const toast = await this.toastController.create({
-                      message:
-                        'Guardado, pero no es posible enviarlo al EPASS',
-                      position: 'bottom',
-                      duration: 1000,
-                      cssClass: 'toast-danger',
-                    });
-                    toast.present();
-                    loading_.dismiss();
-                    window.location.href = '/inspections';*/
-                  }
-                );
+                  );
               } else {
-                /*const toast = await this.toastController.create({
-                message: 'Guardado, pero no es posible enviarlo',
-                position: 'bottom',
-                duration: 1000,
-                cssClass: 'toast-danger',
-              });
-              toast.present();*/
+                console.log('Inspeccion enviada con error');
               }
-              resolve1(true);
             },
             async (error) => {
-              reject(false);
-              /*loading.dismiss();
-            const toast = await this.toastController.create({
-              message:
-                'Guardado, pero no es posible enviarlo en este momento',
-              position: 'bottom',
-              duration: 1000,
-              cssClass: 'toast-danger',
-            });
-            toast.present();
-            window.location.href = '/inspections';*/
+              reject(JSON.stringify(error));
             }
           );
-        });
       }
-      resolve(true);
     });
   }
 }

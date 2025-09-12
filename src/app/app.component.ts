@@ -83,7 +83,7 @@ export class AppComponent implements OnInit{
     });
   }
   init(){
-    console.log("Init")
+    //console.log("Init")
     this.initialized = true;
   }
 }
