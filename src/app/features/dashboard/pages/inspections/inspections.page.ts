@@ -206,7 +206,7 @@ export class InspectionsPage implements OnInit, ViewWillEnter {
             //console.log("Inspeccion activa");
           }
           var dk = await this.storage.select(
-              `UPDATE inspecciones_cabecera SET status = 'INVALID' WHERE inspection_id = ${remove_inspections[i].cod_inspeccion}`
+              `UPDATE inspecciones_cabecera SET status = 'INVALID' WHERE cod_inspeccion = ${remove_inspections[i].cod_inspeccion}`
             );
         }
       }
