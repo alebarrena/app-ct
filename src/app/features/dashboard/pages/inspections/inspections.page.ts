@@ -149,6 +149,50 @@ export class InspectionsPage implements OnInit, ViewWillEnter {
       .toString()
       .padStart(2, '0')}/${date.getFullYear()}`;
   }
+  async send() {
+    var inspecciones_pendientes = this.list.filter(
+      (item) => item.completed == 1 && item.sync != 2
+    );
+    /*console.log(
+        'Inspecciones pendientes por sincronizar:',
+        inspecciones_pendientes
+      );*/
+
+    /// Enviar inspecciones completadas no sincronizadas
+    //console.log('Iniciando envío de inspecciones completadas...');
+    var flag = false;
+    for (var i = 0; i < inspecciones_pendientes.length; i++) {
+      var inspeccion = inspecciones_pendientes[i];
+      var d = await this.storage.select(
+        `SELECT * FROM inspecciones_cabecera WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
+      );
+      //console.log('Enviando inspección:', inspeccion.cod_inspeccion,d[0].status);
+      if (inspeccion.status == 'INVALID') {
+        console.log('Marcando inspección como inválida en servidor...');
+      }
+      if (d[0].status == 'CANCELLED') {
+        var dd = await this.dashboardService.desist(d[0].cod_inspeccion);
+      }
+      if (d[0].status == 'ACTIVE') {
+        //console.log("Envio de inspeccion");
+        var ds = await this.dashboardService.send(inspeccion.cod_inspeccion);
+      }
+      flag = true;
+    }
+    if (flag) {
+      setTimeout(async () => {
+        //console.log('Actualizando lista tras sincronización...');
+        if (window.location.hash == '#pending')
+          this.status_filter = 'pendientes';
+        if (window.location.hash == '#finished')
+          this.status_filter = 'finalizadas';
+        var d = await this.storage.select('SELECT * FROM inspecciones');
+        this.list = d;
+        this.filteredList = this.list;
+        //console.log('Lista tras sincronización:', this.list);
+      }, 300);
+    }
+  }
   async refresh() {
     try {
       //console.log('Iniciando refresh...');
@@ -194,20 +238,19 @@ export class InspectionsPage implements OnInit, ViewWillEnter {
         );
         if (d.length == 0) {
           // console.log("Eliminando inspección definitivamente...");
-           var ad = await this.storage.run(
+          var ad = await this.storage.run(
             `DELETE FROM inspecciones WHERE cod_inspeccion = '${remove_inspections[i].cod_inspeccion}'`
           );
         } else {
           //console.log("Marcando inspección como inválida...",d[0]);
           if (d[0].status != 'ACTIVE') {
             //console.log("La inspección ya está marcada como inválida. No se realizan cambios.");
-            
           } else {
             //console.log("Inspeccion activa");
           }
           var dk = await this.storage.select(
-              `UPDATE inspecciones_cabecera SET status = 'INVALID' WHERE cod_inspeccion = '${remove_inspections[i].cod_inspeccion}'`
-            );
+            `UPDATE inspecciones_cabecera SET status = 'INVALID' WHERE cod_inspeccion = '${remove_inspections[i].cod_inspeccion}'`
+          );
         }
       }
       //console.log('Agregando nuevas inspecciones...');
@@ -239,49 +282,6 @@ export class InspectionsPage implements OnInit, ViewWillEnter {
       if (this.status_filter == 'por-enviar') {
         this.filteredList = this.list.filter((item) => item.sync == 0);
         //console.log('Filtrando por enviar:', this.filteredList);
-      }
-
-      var inspecciones_pendientes = this.list.filter(
-        (item) => item.completed == 1 && item.sync != 2
-      );
-      /*console.log(
-        'Inspecciones pendientes por sincronizar:',
-        inspecciones_pendientes
-      );*/
-
-      /// Enviar inspecciones completadas no sincronizadas
-      //console.log('Iniciando envío de inspecciones completadas...');
-      var flag = false;
-      for (var i = 0; i < inspecciones_pendientes.length; i++) {
-        var inspeccion = inspecciones_pendientes[i];
-        var d = await this.storage.select(
-          `SELECT * FROM inspecciones_cabecera WHERE cod_inspeccion = '${inspeccion.cod_inspeccion}'`
-        );
-        //console.log('Enviando inspección:', inspeccion.cod_inspeccion,d[0].status);
-        if (inspeccion.status == 'INVALID') {
-          console.log('Marcando inspección como inválida en servidor...');
-        }
-        if (d[0].status == 'CANCELLED') {
-         var dd = await  this.dashboardService.desist(d[0].cod_inspeccion);
-        }
-        if (d[0].status == 'ACTIVE') {
-          //console.log("Envio de inspeccion");
-          var ds = await this.dashboardService.send(inspeccion.cod_inspeccion);
-        }
-        flag = true;
-      }
-      if (flag) {
-        setTimeout(async () => {
-          //console.log('Actualizando lista tras sincronización...');
-          if (window.location.hash == '#pending')
-            this.status_filter = 'pendientes';
-          if (window.location.hash == '#finished')
-            this.status_filter = 'finalizadas';
-          var d = await this.storage.select('SELECT * FROM inspecciones');
-          this.list = d;
-          this.filteredList = this.list;
-          //console.log('Lista tras sincronización:', this.list);
-        }, 300);
       }
     } catch (e) {
       // console.log('Error en el proceso de sincronización:', e);
