@@ -23,9 +23,6 @@
         <ion-button *ngIf="!loading" (click)="refresh()">
           <ion-icon name="refresh-outline"></ion-icon>
         </ion-button>
-        <ion-button *ngIf="!loading" (click)="send()">
-          <ion-icon name="home-outline"></ion-icon>
-        </ion-button>
       </div>
     </div>
     <div class="mx-1">
@@ -59,6 +56,8 @@
 
           </ion-button>
           <ion-button class="download-inspection-button" (click)="download(i)" *ngIf="i.completed == 1 && i.sync == 2 && i.status != 'CANCELLED'" style="width:40px"><ion-icon class="check" name="download-outline" ></ion-icon></ion-button>
+          <ion-button class="send-inspection-button" (click)="sendInspection(i)"  *ngIf="i.completed == 1 && i.sync == 0" style="width:40px"><ion-icon class="check" name="send" ></ion-icon></ion-button>
+          
         </ion-item>
       </ion-list>
     </div> 

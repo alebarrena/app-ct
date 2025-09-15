@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, EnvironmentInjector, inject, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { LayoutComponent } from './widgets/layout/layout.component';
-import { add, addOutline, alertCircleOutline, alertCircleSharp, bedOutline, briefcaseOutline, businessOutline, calculatorOutline, callOutline, cameraOutline, cameraSharp, checkbox, checkboxOutline, checkmarkCircle, checkmarkCircleOutline, checkmarkDone, checkmarkDoneOutline, checkmarkOutline, chevronBack, chevronBackOutline, chevronDown, chevronForward, chevronForwardOutline, chevronUp, closeOutline, cloudUploadOutline, documentOutline, documentTextOutline, downloadOutline, ellipseOutline, eye, eyeOff, fileTrayOutline, flagOutline, folderOpenOutline, folderOpenSharp, gameController, gameControllerOutline, gitMergeOutline, homeOutline, homeSharp, imagesOutline, linkOutline, lockClosed, logOutOutline, mailOutline, micCircleOutline, newspaperOutline, newspaperSharp, pauseOutline, peopleOutline, personCircleOutline, personOutline, personSharp, phonePortraitOutline, playOutline, playSharp, readerOutline, refreshOutline, removeCircleOutline, removeCircleSharp, removeOutline, restaurantOutline, searchOutline, settingsOutline, squareOutline, storefrontOutline, textOutline, timeOutline, trash, trashOutline, trashSharp, tvOutline, womanOutline } from 'ionicons/icons';
+import { add, addOutline, alertCircleOutline, alertCircleSharp, bedOutline, briefcaseOutline, businessOutline, calculatorOutline, callOutline, cameraOutline, cameraSharp, checkbox, checkboxOutline, checkmarkCircle, checkmarkCircleOutline, checkmarkDone, checkmarkDoneOutline, checkmarkOutline, chevronBack, chevronBackOutline, chevronDown, chevronForward, chevronForwardOutline, chevronUp, closeOutline, cloudUploadOutline, documentOutline, documentTextOutline, downloadOutline, ellipseOutline, eye, eyeOff, fileTrayOutline, flagOutline, folderOpenOutline, folderOpenSharp, gameController, gameControllerOutline, gitMergeOutline, homeOutline, homeSharp, imagesOutline, linkOutline, lockClosed, logOutOutline, mailOutline, micCircleOutline, newspaperOutline, newspaperSharp, pauseOutline, peopleOutline, personCircleOutline, personOutline, personSharp, phonePortraitOutline, playOutline, playSharp, readerOutline, refreshOutline, removeCircleOutline, removeCircleSharp, removeOutline, restaurantOutline, searchOutline, send, settingsOutline, squareOutline, storefrontOutline, textOutline, timeOutline, trash, trashOutline, trashSharp, tvOutline, womanOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { ConectionService } from './helpers/conection/conection.service';
 import { StorageService } from './helpers/database/storage/storage.service';
@@ -46,6 +46,7 @@ addIcons({add,eye, lockClosed, personCircleOutline,eyeOff,
   cameraOutline,
   textOutline,
   fileTrayOutline,
+  send,
   refreshOutline,timeOutline,downloadOutline,
   documentOutline,closeOutline,playSharp,trashSharp,calculatorOutline,linkOutline,
   trashOutline,checkbox,checkmarkCircle,trash,checkboxOutline,checkmarkCircleOutline,ellipseOutline,cloudUploadOutline,logOutOutline,flagOutline,phonePortraitOutline,
