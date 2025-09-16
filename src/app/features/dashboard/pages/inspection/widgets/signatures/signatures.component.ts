@@ -308,7 +308,13 @@ export class SignaturesComponent implements OnInit {
       toast.present();
     } else {
       if (this.sign1 != null && this.sign2 != null) {
-        this.storage.run(
+        this.dashboardService.upload( this.id!, this.current_datetime, this.toastController, this.loadingCtrl).then
+        ((data)=>{
+          console.log(data);
+        },(error)=>{
+          console.log(error);
+        });
+        /*this.storage.run(
           `UPDATE inspecciones SET completed = 1, updated_at = '${this.current_datetime.toISOString()}' WHERE cod_inspeccion = '${
             this.id
           }'`
@@ -860,7 +866,7 @@ export class SignaturesComponent implements OnInit {
               window.location.href = '/inspections';
             }
           );
-        }
+        }*/
       } else {
         const toast = await this.toastController.create({
           message: 'Debe existir ambas firmas',

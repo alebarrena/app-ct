@@ -56,7 +56,7 @@
 
           </ion-button>
           <ion-button class="download-inspection-button" (click)="download(i)" *ngIf="i.completed == 1 && i.sync == 2 && i.status != 'CANCELLED'" style="width:40px"><ion-icon class="check" name="download-outline" ></ion-icon></ion-button>
-          <ion-button class="send-inspection-button" (click)="sendInspection(i)"  *ngIf="i.completed == 1 && i.sync == 0" style="width:40px"><ion-icon class="check" name="send" ></ion-icon></ion-button>
+          <ion-button class="send-inspection-button" (click)="sendInspection(i)"  *ngIf="i.completed == 1 && i.sync !=null && i.sync < 2" style="width:40px"><ion-icon class="check" name="send" ></ion-icon></ion-button>
           
         </ion-item>
       </ion-list>
